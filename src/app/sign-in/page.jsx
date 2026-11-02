@@ -16,6 +16,13 @@ const SignInPage = () => {
         password: '',
     });
 
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
+    }
+
     const handleSignIn = async (e) => {
         e.preventDefault();
 
@@ -105,7 +112,7 @@ const SignInPage = () => {
 
                 <div className="flex items-center gap-3">
                     <div className="h-px flex-1 bg-[#E2E8F0] dark:bg-[#334155]" />
-                    <span className="text-xs text-[#64748B]">OR SIGN UP WITH</span>
+                    <span className="text-xs text-[#64748B]">OR SIGN IN WITH</span>
                     <div className="h-px flex-1 bg-[#E2E8F0] dark:bg-[#334155]" />
                 </div>
 

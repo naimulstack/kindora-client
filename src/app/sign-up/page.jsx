@@ -1,21 +1,25 @@
 'use client';
 
 import { useState } from 'react';
-import { User, Mail, Lock, ArrowRight, ShieldCheck } from 'lucide-react';
+import { User, Mail, Lock, ArrowRight, ShieldCheck, Image as ImageIcon } from 'lucide-react';
 import { FaGithub } from 'react-icons/fa6';
 import { FcGoogle } from "react-icons/fc";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "react-hot-toast";
 
 const SignUpPage = () => {
     const router = useRouter();
 
     const [formData, setFormData] = useState({
         name: '',
+        image: '',
         email: '',
         password: '',
     });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const handleChange = (e) => {
         setFormData({
@@ -26,19 +30,30 @@ const SignUpPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+        setLoading(true);
 
-        const { data, error } = await authClient.signUp.email({
-            ...formData,
+        const { data, error: authError } = await authClient.signUp.email({
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+            image: formData.image?.trim() || undefined,
         });
 
-        if (error) {
-            console.log(error);
+        if (authError) {
+            console.error(authError);
+            setError(authError.message || 'Registration failed. Please check your details.');
+            toast.error(authError.message || 'Registration failed');
+            setLoading(false);
             return;
         }
 
         if (data) {
+            toast.success('Account created successfully!');
             router.push("/");
+            router.refresh();
         }
+        setLoading(false);
     };
 
     return (
@@ -60,8 +75,15 @@ const SignUpPage = () => {
                     </p>
                 </div>
 
+                {error && (
+                    <div className="p-3.5 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 text-xs font-medium">
+                        {error}
+                    </div>
+                )}
+
                 <form onSubmit={handleSubmit} className="space-y-5">
 
+                    {/* Full Name */}
                     <div>
                         <label className="block text-xs font-bold uppercase tracking-wider text-[#172B3A] dark:text-[#F1F5F9] mb-2">
                             Full Name
@@ -82,6 +104,44 @@ const SignUpPage = () => {
                         </div>
                     </div>
 
+                    {/* Profile Picture Link */}
+                    <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-[#172B3A] dark:text-[#F1F5F9] mb-2">
+                            Profile Picture Link
+                        </label>
+
+                        <div className="relative">
+                            <ImageIcon className="w-4 h-4 text-[#64748B] absolute left-4 top-3.5" />
+
+                            <input
+                                type="url"
+                                name="image"
+                                value={formData.image}
+                                onChange={handleChange}
+                                placeholder="https://example.com/profile.jpg"
+                                className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-[#111C2E] border border-[#E2E8F0] dark:border-[#334155] focus:border-[#16A34A] dark:focus:border-[#22C55E] rounded-xl text-sm text-[#172B3A] dark:text-[#F1F5F9] focus:outline-none"
+                            />
+                        </div>
+
+                        {formData.image && (
+                            <div className="mt-2.5 flex items-center gap-3 p-2 bg-slate-50 dark:bg-[#111C2E] rounded-xl border border-dashed border-[#E2E8F0] dark:border-[#334155]">
+                                <img
+                                    src={formData.image}
+                                    alt="Profile Preview"
+                                    referrerPolicy="no-referrer"
+                                    onError={(e) => {
+                                        e.currentTarget.style.display = 'none';
+                                    }}
+                                    className="w-9 h-9 rounded-full object-cover ring-2 ring-[#16A34A] shrink-0"
+                                />
+                                <span className="text-xs text-[#64748B] dark:text-[#CBD5E1] truncate">
+                                    Profile picture preview
+                                </span>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Email Address */}
                     <div>
                         <label className="block text-xs font-bold uppercase tracking-wider text-[#172B3A] dark:text-[#F1F5F9] mb-2">
                             Email Address
@@ -102,6 +162,7 @@ const SignUpPage = () => {
                         </div>
                     </div>
 
+                    {/* Password */}
                     <div>
                         <label className="block text-xs font-bold uppercase tracking-wider text-[#172B3A] dark:text-[#F1F5F9] mb-2">
                             Password
@@ -124,10 +185,11 @@ const SignUpPage = () => {
 
                     <button
                         type="submit"
-                        className="w-full bg-[#16A34A] hover:bg-[#15803D] text-white font-bold py-3.5 rounded-2xl transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 text-sm sm:text-base"
+                        disabled={loading}
+                        className="w-full bg-[#16A34A] hover:bg-[#15803D] disabled:opacity-70 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-2xl transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 text-sm sm:text-base"
                     >
-                        Sign Up
-                        <ArrowRight className="w-4 h-4" />
+                        {loading ? 'Creating Account...' : 'Sign Up'}
+                        {!loading && <ArrowRight className="w-4 h-4" />}
                     </button>
                 </form>
 

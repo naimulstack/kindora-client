@@ -2,7 +2,6 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/navbar";
 import { ThemeProvider } from "../components/theme-provider";
-import { AuthProvider } from "../components/auth-provider";
 import Footer from "@/components/footer";
 import { Toaster } from "react-hot-toast";
 
@@ -23,11 +22,9 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          <AuthProvider>
-            <Navbar />
-            {children}
-            <Toaster position="top-right" reverseOrder={false} />
-          </AuthProvider>
+          <Navbar />
+          {children}
+          <Toaster position="top-right" reverseOrder={false} />
         </ThemeProvider>
         <Footer />
       </body>

@@ -1,36 +1,73 @@
 'use client';
-import React, { useState } from 'react';
-import { 
-  Sun, 
-  Moon, 
-  Menu, 
-  X, 
-  ChevronDown, 
-  PlusCircle, 
-  Calendar, 
-  CheckCircle, 
-  LogOut, 
-  Heart 
+import { useState } from 'react';
+import {
+  Sun,
+  Moon,
+  Menu,
+  X,
+  ChevronDown,
+  PlusCircle,
+  Calendar,
+  CheckCircle,
+  LogOut
 } from 'lucide-react';
 import Image from 'next/image';
-import Logo from './../app/Images/Kindora Charity Logo with Heart and Leaf.png'
+import Logo from './../app/Images/Kindora Charity Logo with Heart and Leaf.png';
 import Link from 'next/link';
 import { useTheme } from './theme-provider';
+import { authClient } from '@/lib/auth-client';
 
-const Navbar = ({ isLoggedIn, setIsLoggedIn, user }) => {
+const UserAvatar = ({ user, className = "w-10 h-10" }) => {
+  const [hasError, setHasError] = useState(false);
+  const avatarUrl = user?.image || user?.avatar;
+  const initial = user?.name ? user.name.trim().charAt(0).toUpperCase() : 'U';
+
+  return avatarUrl && !hasError ? (
+    <img
+      key={avatarUrl}
+      src={avatarUrl}
+      alt={user?.name || 'User'}
+      referrerPolicy="no-referrer"
+      onError={() => setHasError(true)}
+      className={`${className} rounded-full object-cover ring-2 ring-[#16A34A] shrink-0`}
+    />
+  ) : (
+    <div className={`${className} rounded-full bg-[#16A34A] text-white flex items-center justify-center font-bold ring-2 ring-[#16A34A] shrink-0`}>
+      {initial}
+    </div>
+  );
+};
+
+const Navbar = () => {
   const { isDark, toggleTheme } = useTheme();
+  const { data: session, isPending } = authClient.useSession();
+
+  const user = session?.user;
+  const isLoggedIn = !!user;
+
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const closeMenus = () => {
+    setIsProfileOpen(false);
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleSignOut = () => {
+    closeMenus();
+    authClient.signOut();
+  };
 
   return (
     <nav className="sticky top-0 z-50 bg-white dark:bg-[#111C2E] border-b border-[#E2E8F0] dark:border-[#334155] transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          
+
           {/* Left: Brand Logo */}
           <Link
             href="/"
             className="flex items-center gap-3 cursor-pointer"
+            onClick={closeMenus}
           >
             <Image src={Logo} alt="Kindora Logo" width={180} height={80} />
           </Link>
@@ -57,86 +94,85 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn, user }) => {
               {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
 
-            {!isLoggedIn ? (
-              /* Before Login State */
-              <button
-                onClick={() => setIsLoggedIn(true)}
+            {isPending ? null : !isLoggedIn ? (
+              /* Signed Out */
+              <Link
+                href="/sign-in"
                 className="bg-[#16A34A] hover:bg-[#15803D] text-white font-medium text-sm px-5 py-2.5 rounded-xl transition-all shadow-sm hover:shadow-emerald-600/20"
               >
                 Sign In
-              </button>
+              </Link>
             ) : (
-              /* After Login State */
+              /* Signed In: Profile Dropdown + Sign Out Button */
               <div className="flex items-center gap-3">
-                {/* Profile Dropdown Trigger */}
                 <div className="relative">
                   <button
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
                     className="flex items-center gap-2 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-[#1E293B] transition-colors group"
                     title={user.name}
                   >
-                    <Image
-                      src={user.avatar}
-                      alt={user.name}
-                      className="w-10 h-10 rounded-full object-cover ring-2 ring-[#16A34A]"
-                    />
+                    <UserAvatar user={user} className="w-10 h-10" />
                     <ChevronDown className="w-4 h-4 text-[#64748B] dark:text-[#CBD5E1] group-hover:text-[#16A34A]" />
                   </button>
 
                   {/* Profile Dropdown Panel */}
                   {isProfileOpen && (
                     <div className="absolute right-0 mt-3 w-64 bg-white dark:bg-[#1E293B] rounded-2xl shadow-xl border border-[#E2E8F0] dark:border-[#334155] py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                      <div className="px-4 py-3 border-b border-[#E2E8F0] dark:border-[#334155]">
-                        <p className="text-sm font-semibold text-[#172B3A] dark:text-[#F1F5F9]">
-                          {user.name}
-                        </p>
-                        <p className="text-xs text-[#64748B] dark:text-[#CBD5E1] truncate">
-                          {user.email}
-                        </p>
+                      <div className="px-4 py-3 border-b border-[#E2E8F0] dark:border-[#334155] flex items-center gap-3">
+                        <UserAvatar user={user} className="w-10 h-10" />
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-semibold text-[#172B3A] dark:text-[#F1F5F9] truncate">
+                            {user.name}
+                          </p>
+                          <p className="text-xs text-[#64748B] dark:text-[#CBD5E1] truncate">
+                            {user.email}
+                          </p>
+                        </div>
                       </div>
 
                       <div className="py-1">
-                        <a 
-                          href="/create-event" 
+                        <Link
+                          href="/create-event"
+                          onClick={() => setIsProfileOpen(false)}
                           className="flex items-center gap-2.5 px-4 py-2 text-sm text-[#334155] dark:text-[#CBD5E1] hover:bg-[#F0FDF4] dark:hover:bg-[#334155] hover:text-[#16A34A] dark:hover:text-[#22C55E]"
                         >
                           <PlusCircle className="w-4 h-4" /> Create Event
-                        </a>
-                        <a 
-                          href="#manage-events" 
+                        </Link>
+                        <Link
+                          href="#manage-events"
+                          onClick={() => setIsProfileOpen(false)}
                           className="flex items-center gap-2.5 px-4 py-2 text-sm text-[#334155] dark:text-[#CBD5E1] hover:bg-[#F0FDF4] dark:hover:bg-[#334155] hover:text-[#16A34A] dark:hover:text-[#22C55E]"
                         >
                           <Calendar className="w-4 h-4" /> Manage Events
-                        </a>
-                        <a 
-                          href="#joined-events" 
+                        </Link>
+                        <Link
+                          href="#joined-events"
+                          onClick={() => setIsProfileOpen(false)}
                           className="flex items-center gap-2.5 px-4 py-2 text-sm text-[#334155] dark:text-[#CBD5E1] hover:bg-[#F0FDF4] dark:hover:bg-[#334155] hover:text-[#16A34A] dark:hover:text-[#22C55E]"
                         >
                           <CheckCircle className="w-4 h-4" /> Joined Events
-                        </a>
+                        </Link>
                       </div>
 
                       <div className="border-t border-[#E2E8F0] dark:border-[#334155] pt-1 mt-1">
                         <button
-                          onClick={() => {
-                            setIsLoggedIn(false);
-                            setIsProfileOpen(false);
-                          }}
+                          onClick={handleSignOut}
                           className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
                         >
-                          <LogOut className="w-4 h-4" /> Logout
+                          <LogOut className="w-4 h-4" /> Sign Out
                         </button>
                       </div>
                     </div>
                   )}
                 </div>
 
-                {/* Separate Logout Button */}
+                {/* Direct Sign Out Button on Right of Profile */}
                 <button
-                  onClick={() => setIsLoggedIn(false)}
-                  className="bg-[#FEE2E2] hover:bg-[#FECACA] text-[#DC2626] font-medium text-sm px-4 py-2 rounded-xl transition-colors"
+                  onClick={handleSignOut}
+                  className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-xl transition-all"
+                  title="Sign Out"
                 >
-                  Logout
+                  <LogOut className="w-3.5 h-3.5" /> Sign Out
                 </button>
               </div>
             )}
@@ -163,39 +199,56 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn, user }) => {
       {/* Mobile Drawer */}
       {isMobileMenuOpen && (
         <div className="md:hidden border-t border-[#E2E8F0] dark:border-[#334155] bg-white dark:bg-[#111C2E] px-4 pt-3 pb-6 space-y-3">
-          <a
-            href="#upcoming-events"
+          <Link
+            href="/events"
+            onClick={closeMenus}
             className="block py-2 text-base font-medium text-[#172B3A] dark:text-[#F1F5F9]"
           >
             Upcoming Events
-          </a>
-          {!isLoggedIn ? (
-            <button
-              onClick={() => {
-                setIsLoggedIn(true);
-                setIsMobileMenuOpen(false);
-              }}
-              className="w-full bg-[#16A34A] text-white py-2.5 rounded-xl font-medium"
+          </Link>
+          {isPending ? null : !isLoggedIn ? (
+            <Link
+              href="/sign-in"
+              onClick={closeMenus}
+              className="block w-full text-center bg-[#16A34A] text-white py-2.5 rounded-xl font-medium"
             >
-              Login
-            </button>
+              Sign In
+            </Link>
           ) : (
             <div className="space-y-2 pt-2 border-t border-[#E2E8F0] dark:border-[#334155]">
               <div className="flex items-center gap-3 py-2">
-                <img src={user.avatar} alt={user.name} className="w-10 h-10 rounded-full" />
-                <div>
-                  <p className="font-semibold text-[#172B3A] dark:text-[#F1F5F9]">{user.name}</p>
-                  <p className="text-xs text-[#64748B] dark:text-[#CBD5E1]">{user.email}</p>
+                <UserAvatar user={user} className="w-10 h-10" />
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-[#172B3A] dark:text-[#F1F5F9] truncate">{user.name}</p>
+                  <p className="text-xs text-[#64748B] dark:text-[#CBD5E1] truncate">{user.email}</p>
                 </div>
               </div>
-              <button
-                onClick={() => {
-                  setIsLoggedIn(false);
-                  setIsMobileMenuOpen(false);
-                }}
-                className="w-full bg-[#FEE2E2] text-[#DC2626] py-2.5 rounded-xl font-medium"
+              <Link
+                href="/create-event"
+                onClick={closeMenus}
+                className="flex items-center justify-center gap-2 w-full border border-[#E2E8F0] dark:border-[#334155] text-[#172B3A] dark:text-[#F1F5F9] py-2.5 rounded-xl font-medium"
               >
-                Logout
+                <PlusCircle className="w-4 h-4" /> Create Event
+              </Link>
+              <Link
+                href="#manage-events"
+                onClick={closeMenus}
+                className="flex items-center justify-center gap-2 w-full border border-[#E2E8F0] dark:border-[#334155] text-[#172B3A] dark:text-[#F1F5F9] py-2.5 rounded-xl font-medium"
+              >
+                <Calendar className="w-4 h-4" /> Manage Events
+              </Link>
+              <Link
+                href="#joined-events"
+                onClick={closeMenus}
+                className="flex items-center justify-center gap-2 w-full border border-[#E2E8F0] dark:border-[#334155] text-[#172B3A] dark:text-[#F1F5F9] py-2.5 rounded-xl font-medium"
+              >
+                <CheckCircle className="w-4 h-4" /> Joined Events
+              </Link>
+              <button
+                onClick={handleSignOut}
+                className="w-full bg-[#FEE2E2] text-[#DC2626] py-2.5 rounded-xl font-medium flex items-center justify-center gap-2"
+              >
+                <LogOut className="w-4 h-4" /> Sign Out
               </button>
             </div>
           )}

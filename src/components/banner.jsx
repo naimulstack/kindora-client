@@ -1,7 +1,13 @@
+'use client';
 import { ArrowRight, Users, HeartHandshake } from 'lucide-react';
 import Image from 'next/image';
+import { authClient } from '@/lib/auth-client';
+import Link from 'next/link';
 
-const BannerPage = ({ isLoggedIn }) => {
+const BannerPage = () => {
+    const { data: session } = authClient.useSession();
+    const isLoggedIn = !!session?.user;
+
     return (
         <section className="bg-[#F0FDF4] dark:bg-[#0B132B] py-16 lg:py-24 transition-colors duration-200">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,15 +29,15 @@ const BannerPage = ({ isLoggedIn }) => {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4 pt-2">
-                            <a
-                                href="#upcoming-events"
+                            <Link
+                                href={"/events"}
                                 className="inline-flex items-center justify-center gap-2 bg-[#16A34A] hover:bg-[#15803D] text-white font-semibold px-6 py-3.5 rounded-xl transition-all shadow-md shadow-emerald-600/20"
                             >
                                 Explore Upcoming Events <ArrowRight className="w-4 h-4" />
-                            </a>
+                            </Link>
 
                             <a
-                                href={isLoggedIn ? "#create-event" : "#login"}
+                                href={isLoggedIn ? "/create-event" : "/sign-in"}
                                 className="inline-flex items-center justify-center bg-white dark:bg-[#1E293B] text-[#16A34A] dark:text-[#22C55E] border-2 border-[#16A34A] dark:border-[#22C55E] hover:bg-emerald-50 dark:hover:bg-[#334155] font-semibold px-6 py-3.5 rounded-xl transition-all"
                             >
                                 Create An Event
