@@ -1,4 +1,6 @@
 import EditEventPage from '@/components/editEvent';
+import DeleteEventPage from '@/components/deleteEvent';
+
 import {
   CalendarDays,
   MapPin,
@@ -9,8 +11,6 @@ import {
   Heart,
   Users,
   ShieldCheck,
-  Pencil,
-  Trash2
 } from 'lucide-react';
 
 import Image from 'next/image';
@@ -60,9 +60,8 @@ const EventDetailPage = async ({ params }) => {
             <div className="flex items-center gap-3">
 
               <EditEventPage eventData={eventData} />
-              <button className="p-2.5 rounded-2xl bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] text-[#64748B] hover:text-red-500 transition-all">
-                <Trash2 className="w-4 h-4 hove" />
-              </button>
+              <DeleteEventPage eventId={eventData} />
+
             </div>
           </div>
 
