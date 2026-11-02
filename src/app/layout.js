@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
             {children}
           </AuthProvider>
         </ThemeProvider>
-        <Footer/>
+        <Footer />
       </body>
     </html>
   );

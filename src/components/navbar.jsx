@@ -14,8 +14,11 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import Logo from './../app/Images/Kindora Charity Logo with Heart and Leaf.png'
+import Link from 'next/link';
+import { useTheme } from './theme-provider';
 
-const Navbar = ({ isDark, setIsDark, isLoggedIn, setIsLoggedIn, user }) => {
+const Navbar = ({ isLoggedIn, setIsLoggedIn, user }) => {
+  const { isDark, toggleTheme } = useTheme();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -25,26 +28,29 @@ const Navbar = ({ isDark, setIsDark, isLoggedIn, setIsLoggedIn, user }) => {
         <div className="flex items-center justify-between h-20">
           
           {/* Left: Brand Logo */}
-          <div className="flex items-center gap-3 cursor-pointer">
+          <Link
+            href="/"
+            className="flex items-center gap-3 cursor-pointer"
+          >
             <Image src={Logo} alt="Kindora Logo" width={180} height={80} />
-          </div>
+          </Link>
 
           {/* Center: Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            <a 
-              href="#upcoming-events" 
+            <Link
+              href="/events"
               className="text-[#334155] dark:text-[#F1F5F9] hover:text-[#16A34A] dark:hover:text-[#22C55E] font-medium text-sm transition-colors py-2 relative group"
             >
               Upcoming Events
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#16A34A] dark:bg-[#22C55E] transition-all group-hover:w-full"></span>
-            </a>
+            </Link>
           </div>
 
           {/* Right: Theme Toggle & Authentication */}
           <div className="hidden md:flex items-center gap-3">
             {/* Theme Toggle */}
             <button
-              onClick={() => setIsDark(!isDark)}
+              onClick={toggleTheme}
               className="p-2.5 rounded-full bg-[#F0FDF4] dark:bg-[#1E293B] text-[#15803D] dark:text-[#22C55E] hover:bg-emerald-100 dark:hover:bg-[#334155] transition-all"
               aria-label="Toggle Theme"
             >
@@ -139,7 +145,7 @@ const Navbar = ({ isDark, setIsDark, isLoggedIn, setIsLoggedIn, user }) => {
           {/* Mobile Menu Button */}
           <div className="flex items-center gap-2 md:hidden">
             <button
-              onClick={() => setIsDark(!isDark)}
+              onClick={toggleTheme}
               className="p-2 rounded-full bg-[#F0FDF4] dark:bg-[#1E293B] text-[#15803D] dark:text-[#22C55E]"
             >
               {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}

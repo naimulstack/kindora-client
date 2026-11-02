@@ -81,6 +81,10 @@ export function ThemeProvider({ children }) {
     [activeTheme, setTheme, toggleTheme]
   );
 
+  React.useEffect(() => {
+    document.documentElement.classList.toggle("dark", activeTheme === "dark");
+  }, [activeTheme]);
+
   return (
     <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
