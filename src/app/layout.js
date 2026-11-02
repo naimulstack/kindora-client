@@ -4,11 +4,11 @@ import Navbar from "../components/navbar";
 import { ThemeProvider } from "../components/theme-provider";
 import { AuthProvider } from "../components/auth-provider";
 import Footer from "@/components/footer";
+import { Toaster } from "react-hot-toast";
 
 const PlusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
 });
-
 
 export const metadata = {
   title: "Kindora",
@@ -24,8 +24,9 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
           <AuthProvider>
-            <Navbar/>
+            <Navbar />
             {children}
+            <Toaster position="top-right" reverseOrder={false} />
           </AuthProvider>
         </ThemeProvider>
         <Footer />
