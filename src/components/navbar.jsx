@@ -63,7 +63,7 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn, user }) => {
                 onClick={() => setIsLoggedIn(true)}
                 className="bg-[#16A34A] hover:bg-[#15803D] text-white font-medium text-sm px-5 py-2.5 rounded-xl transition-all shadow-sm hover:shadow-emerald-600/20"
               >
-                Login
+                Sign In
               </button>
             ) : (
               /* After Login State */
@@ -75,7 +75,7 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn, user }) => {
                     className="flex items-center gap-2 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-[#1E293B] transition-colors group"
                     title={user.name}
                   >
-                    <img
+                    <Image
                       src={user.avatar}
                       alt={user.name}
                       className="w-10 h-10 rounded-full object-cover ring-2 ring-[#16A34A]"
@@ -97,7 +97,7 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn, user }) => {
 
                       <div className="py-1">
                         <a 
-                          href="#create-event" 
+                          href="/create-event" 
                           className="flex items-center gap-2.5 px-4 py-2 text-sm text-[#334155] dark:text-[#CBD5E1] hover:bg-[#F0FDF4] dark:hover:bg-[#334155] hover:text-[#16A34A] dark:hover:text-[#22C55E]"
                         >
                           <PlusCircle className="w-4 h-4" /> Create Event
