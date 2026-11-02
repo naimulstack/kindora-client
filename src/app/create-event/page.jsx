@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     ArrowLeft,
     Sparkles,
@@ -16,7 +16,6 @@ import {
 } from 'lucide-react';
 
 const CreateEventPage = ({ onBack, user }) => {
-    // Helper to get today's date in YYYY-MM-DD format
     const getTodayDate = () => {
         const today = new Date();
         const year = today.getFullYear();

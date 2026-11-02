@@ -1,3 +1,4 @@
+import EditEventPage from '@/components/editEvent';
 import {
   CalendarDays,
   MapPin,
@@ -19,9 +20,9 @@ const EventDetailPage = async ({ params }) => {
   const { id } = await params;
 
   const res = await fetch(`http://localhost:5000/events/${id}`);
-  const data = await res.json();
+  const eventData = await res.json();
 
-  if (!res.ok || !data || data.message === "Event not found") {
+  if (!res.ok || !eventData || eventData.message === "Event not found") {
     return (
       <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] flex items-center justify-center px-4 py-10">
         <div className="max-w-md w-full bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-3xl p-8 text-center shadow-xl">
@@ -57,25 +58,10 @@ const EventDetailPage = async ({ params }) => {
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <Link
-                href={`/events/edit/${id}`}
-                className="p-2.5 rounded-2xl bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] text-[#64748B] hover:text-[#16A34A] transition-all"
-              >
-                <Pencil className="w-4 h-4" />
-              </Link>
 
+              <EditEventPage eventData={eventData} />
               <button className="p-2.5 rounded-2xl bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] text-[#64748B] hover:text-red-500 transition-all">
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button className="p-2.5 rounded-2xl bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] text-[#64748B] hover:text-red-500 transition-all">
-                <Heart className="w-4 h-4" />
-              </button>
-
-              <button className="p-2.5 rounded-2xl bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] text-[#64748B] hover:text-[#16A34A] transition-all">
-                <Share2 className="w-4 h-4" />
+                <Trash2 className="w-4 h-4 hove" />
               </button>
             </div>
           </div>
@@ -94,8 +80,8 @@ const EventDetailPage = async ({ params }) => {
         {/* Hero Cover Image */}
         <div className="relative h-72 sm:h-96 rounded-3xl overflow-hidden shadow-xl border border-[#E2E8F0] dark:border-[#334155] bg-slate-100 dark:bg-[#111C2E]">
           <Image
-            src={data?.image || 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&q=80&w=1200'}
-            alt={data?.title || 'Event Cover'}
+            src={eventData?.image || 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&q=80&w=1200'}
+            alt={eventData?.title || 'Event Cover'}
             width={1200}
             height={800}
             className="w-full h-full object-cover"
@@ -104,10 +90,10 @@ const EventDetailPage = async ({ params }) => {
 
           <div className="absolute bottom-6 left-6 right-6">
             <span className="inline-flex items-center gap-1.5 bg-[#16A34A] text-white text-xs font-semibold px-3.5 py-1 rounded-full shadow-sm mb-2">
-              <Tag className="w-3.5 h-3.5" /> {data?.type || 'Community Drive'}
+              <Tag className="w-3.5 h-3.5" /> {eventData?.type || 'Community Drive'}
             </span>
             <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-              {data?.title}
+              {eventData?.title}
             </h1>
           </div>
         </div>
@@ -126,7 +112,7 @@ const EventDetailPage = async ({ params }) => {
                 </div>
                 <div>
                   <p className="text-xs text-[#64748B] dark:text-[#CBD5E1] font-medium">Event Date</p>
-                  <p className="text-sm font-bold text-[#172B3A] dark:text-[#F1F5F9]">{data?.date}</p>
+                  <p className="text-sm font-bold text-[#172B3A] dark:text-[#F1F5F9]">{eventData?.date}</p>
                 </div>
               </div>
 
@@ -136,7 +122,7 @@ const EventDetailPage = async ({ params }) => {
                 </div>
                 <div>
                   <p className="text-xs text-[#64748B] dark:text-[#CBD5E1] font-medium">Location Venue</p>
-                  <p className="text-sm font-bold text-[#172B3A] dark:text-[#F1F5F9] truncate max-w-[180px]">{data?.location}</p>
+                  <p className="text-sm font-bold text-[#172B3A] dark:text-[#F1F5F9] truncate max-w-[180px]">{eventData?.location}</p>
                 </div>
               </div>
             </div>
@@ -145,7 +131,7 @@ const EventDetailPage = async ({ params }) => {
             <div className="bg-white dark:bg-[#1E293B] p-6 sm:p-8 rounded-3xl border border-[#E2E8F0] dark:border-[#334155] shadow-sm space-y-4">
               <h2 className="text-xl font-bold text-[#172B3A] dark:text-[#F1F5F9]">About This Drive</h2>
               <p className="text-sm sm:text-base text-[#64748B] dark:text-[#CBD5E1] leading-relaxed whitespace-pre-line">
-                {data?.description}
+                {eventData?.description}
               </p>
 
               <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-3 text-xs text-[#64748B]">
@@ -162,7 +148,7 @@ const EventDetailPage = async ({ params }) => {
                 </div>
                 <div>
                   <p className="text-xs text-[#64748B]">Organized By</p>
-                  <p className="text-sm font-bold text-[#172B3A] dark:text-[#F1F5F9]">{data?.organizerEmail || 'Kindora Volunteer Team'}</p>
+                  <p className="text-sm font-bold text-[#172B3A] dark:text-[#F1F5F9]">{eventData?.organizerEmail || 'Kindora Volunteer Team'}</p>
                 </div>
               </div>
               <span className="px-3 py-1 bg-[#F0FDF4] dark:bg-emerald-950/50 text-[#16A34A] text-xs font-semibold rounded-full">
