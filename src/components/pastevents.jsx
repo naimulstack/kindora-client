@@ -19,7 +19,7 @@ const PastEvents = () => {
     }, []);
 
     return (
-        <section className="py-16 px-4 sm:px-6 lg:px-12 bg-[#F8FAFC] dark:bg-[#0F172A] transition-colors duration-200">
+        <section className="py-16 px-4 sm:px-6 lg:px-12 dark:bg-[#0F172A] transition-colors duration-200">
             <div className="max-w-6xl mx-auto space-y-10">
 
                 {/* Header */}

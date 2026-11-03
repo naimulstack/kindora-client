@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -15,10 +16,14 @@ const JoinEventCard = ({ eventData }) => {
     const [checking, setChecking] = useState(true);
     const [loading, setLoading] = useState(false);
 
+    const isExpired =
+        new Date(eventData.date).setHours(0, 0, 0, 0) <
+        new Date().setHours(0, 0, 0, 0);
+
     useEffect(() => {
         if (isPending) return;
 
-        if (!user?.email || !eventData?._id) {
+        if (isExpired || !user?.email || !eventData?._id) {
             setChecking(false);
             return;
         }
@@ -40,7 +45,7 @@ const JoinEventCard = ({ eventData }) => {
         };
 
         checkJoined();
-    }, [user?.email, eventData?._id, isPending]);
+    }, [user?.email, eventData?._id, isPending, isExpired]);
 
     const handleJoinEvent = async () => {
         if (!user) {
@@ -98,48 +103,62 @@ const JoinEventCard = ({ eventData }) => {
                     <span className="text-sm text-[#64748B] dark:text-[#CBD5E1]">
                         Participating Volunteers
                     </span>
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span className={`w-2.5 h-2.5 rounded-full ${isExpired ? "bg-slate-400" : "bg-emerald-500 animate-pulse"
+                        }`}></span>
                 </div>
 
                 <div className="space-y-3">
                     <h3 className="text-lg font-bold text-[#172B3A] dark:text-[#F1F5F9]">
-                        {isJoined ? "You're In! 🎉" : "Ready to Make an Impact?"}
+                        {isExpired
+                            ? "Event Completed"
+                            : isJoined
+                                ? "You're In! 🎉"
+                                : "Ready to Make an Impact?"}
                     </h3>
 
                     <p className="text-xs text-[#64748B] dark:text-[#CBD5E1]">
-                        {isJoined
-                            ? "You have joined this event. You can leave anytime."
-                            : "Confirm your participation to receive event updates and coordinate with the organizer."}
+                        {isExpired
+                            ? "This event has already ended. Thank you for your interest!"
+                            : isJoined
+                                ? "You have joined this event. You can leave anytime."
+                                : "Confirm your participation to receive event updates and coordinate with the organizer."}
                     </p>
                 </div>
 
-                <button
-                    onClick={handleJoinEvent}
-                    disabled={checking || loading || isPending}
-                    className={`w-full font-bold py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 text-base disabled:opacity-60 ${
-                        isJoined
-                            ? "bg-red-500 hover:bg-red-600 text-white"
-                            : "bg-[#16A34A] hover:bg-[#15803D] text-white"
-                    }`}
-                >
-                    {checking || loading || isPending ? (
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                    ) : isJoined ? (
-                        <>
-                            <LogOut className="w-5 h-5" />
-                            Leave This Event
-                        </>
-                    ) : (
-                        <>
-                            <UserCheck className="w-5 h-5" />
-                            Join This Event
-                        </>
-                    )}
-                </button>
+                {isExpired ? (
+                    <p className="text-center bg-slate-100 dark:bg-slate-800 text-slate-500 font-bold py-4 rounded-2xl">
+                        Event Completed
+                    </p>
+                ) : (
+                    <button
+                        onClick={handleJoinEvent}
+                        disabled={checking || loading || isPending}
+                        className={`w-full font-bold py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 text-base disabled:opacity-60 ${isJoined
+                                ? "bg-red-500 hover:bg-red-600 text-white"
+                                : "bg-[#16A34A] hover:bg-[#15803D] text-white"
+                            }`}
+                    >
+                        {checking || loading || isPending ? (
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : isJoined ? (
+                            <>
+                                <LogOut className="w-5 h-5" />
+                                Leave This Event
+                            </>
+                        ) : (
+                            <>
+                                <UserCheck className="w-5 h-5" />
+                                Join This Event
+                            </>
+                        )}
+                    </button>
+                )}
 
-                <p className="text-[11px] text-[#94A3B8] text-center">
-                    By joining, you agree to Kindora community volunteering code of conduct.
-                </p>
+                {!isExpired && (
+                    <p className="text-[11px] text-[#94A3B8] text-center">
+                        By joining, you agree to Kindora community volunteering code of conduct.
+                    </p>
+                )}
 
             </div>
         </div>

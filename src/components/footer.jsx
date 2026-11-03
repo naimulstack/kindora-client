@@ -35,10 +35,18 @@ const Footer = () => {
                     <div>
                         <h4 className="text-white font-semibold text-base mb-4">Quick Links</h4>
                         <ul className="space-y-2.5 text-sm">
-                            <li><a href="#" className="hover:text-[#F59E0B] transition-colors">Home</a></li>
-                            <li><a href="#upcoming-events" className="hover:text-[#F59E0B] transition-colors">Upcoming Events</a></li>
-                            <li><a href="#create-event" className="hover:text-[#F59E0B] transition-colors">Create Event</a></li>
-                            <li><a href="#manage-events" className="hover:text-[#F59E0B] transition-colors">Manage Events</a></li>
+                            <li>
+                                <Link href="/" className="hover:text-[#F59E0B] transition-colors">Home</Link>
+                            </li>
+                            <li>
+                                <Link href="/events" className="hover:text-[#F59E0B] transition-colors">Upcoming Events</Link>
+                            </li>
+                            <li>
+                                <Link href="/create-event" className="hover:text-[#F59E0B] transition-colors">Create Event</Link>
+                            </li>
+                            <li>
+                                <Link href="/manage-event" className="hover:text-[#F59E0B] transition-colors">Manage Events</Link>
+                            </li>
                         </ul>
                     </div>
 
@@ -46,10 +54,15 @@ const Footer = () => {
                     <div>
                         <h4 className="text-white font-semibold text-base mb-4">Community</h4>
                         <ul className="space-y-2.5 text-sm">
-                            <li><a href="#" className="hover:text-[#F59E0B] transition-colors">Join Events</a></li>
-                            <li><a href="#" className="hover:text-[#F59E0B] transition-colors">Volunteer</a></li>
-                            <li><a href="#" className="hover:text-[#F59E0B] transition-colors">About Us</a></li>
-                            <li><a href="#" className="hover:text-[#F59E0B] transition-colors">Contact Us</a></li>
+                            <li>
+                                <Link href="/events" className="hover:text-[#F59E0B] transition-colors">Volunteer</Link>
+                            </li>
+                            <li>
+                                <Link href="/about" className="hover:text-[#F59E0B] transition-colors">About Us</Link>
+                            </li>
+                            <li>
+                                <Link href="/contact" className="hover:text-[#F59E0B] transition-colors">Contact Us</Link>
+                            </li>
                         </ul>
                     </div>
 
@@ -61,15 +74,15 @@ const Footer = () => {
                                 <FaFacebookF className="w-5 h-5" />
                             </a>
                             <a href="#" className="w-10 h-10 rounded-xl bg-[#14532D] flex items-center justify-center text-white hover:bg-[#F59E0B] hover:text-[#172B3A] transition-all">
-                                <FaSquareInstagram className="w-5 h-5"/>
+                                <FaSquareInstagram className="w-5 h-5" />
 
                             </a>
                             <a href="#" className="w-10 h-10 rounded-xl bg-[#14532D] flex items-center justify-center text-white hover:bg-[#F59E0B] hover:text-[#172B3A] transition-all">
-                                <FaLinkedinIn className="w-5 h-5"/>
+                                <FaLinkedinIn className="w-5 h-5" />
                             </a>
                             {/* X Logo*/}
                             <a href="#" className="w-10 h-10 rounded-xl bg-[#14532D] flex items-center justify-center text-white hover:bg-[#F59E0B] hover:text-[#172B3A] transition-all">
-                                <FaSquareXTwitter className="w-5 h-5"/>
+                                <FaSquareXTwitter className="w-5 h-5" />
                             </a>
                         </div>
                     </div>

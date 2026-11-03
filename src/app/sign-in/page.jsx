@@ -7,6 +7,7 @@ import { FcGoogle } from "react-icons/fc";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import { toast } from "react-hot-toast";
 
 const SignInPage = () => {
     const router = useRouter();
@@ -25,13 +26,18 @@ const SignInPage = () => {
 
     const handleSignIn = async (e) => {
         e.preventDefault();
-        const { error } = await authClient.signIn.email(formData);
-        
-        if (error) {
-            console.log(error);
-            return;
+
+        try {
+            const { error } = await authClient.signIn.email(formData);
+            if (error) {
+                toast.error(error.message || "Invalid email or password!");
+                return;
+            }
+            toast.success("Login successful!");
+            router.push("/");
+        } catch (error) {
+            toast.error("Something went wrong!");
         }
-        router.push("/");
     };
 
     return (
@@ -97,7 +103,7 @@ const SignInPage = () => {
 
                     <button
                         type="submit"
-                        className="w-full bg-[#16A34A] hover:bg-[#15803D] text-white font-bold py-3.5 rounded-2xl transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 text-sm sm:text-base"
+                        className="w-full bg-[#16A34A] hover:bg-[#15803D] text-white font-bold py-3.5 rounded-2xl transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer"
                     >
                         Sign In
                         <ArrowRight className="w-4 h-4" />
@@ -113,7 +119,7 @@ const SignInPage = () => {
                 <div className="grid grid-cols-2 gap-3">
                     <button
                         type="button"
-                        className="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#E2E8F0] dark:border-[#334155] text-sm font-semibold text-[#172B3A] dark:text-[#F1F5F9] hover:bg-slate-50 dark:hover:bg-[#111C2E] transition-all"
+                        className="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#E2E8F0] dark:border-[#334155] text-sm font-semibold text-[#172B3A] dark:text-[#F1F5F9] hover:bg-slate-50 dark:hover:bg-[#111C2E] transition-all cursor-pointer"
                     >
                         <FcGoogle className="w-5 h-5" />
                         Google
@@ -121,7 +127,7 @@ const SignInPage = () => {
 
                     <button
                         type="button"
-                        className="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#E2E8F0] dark:border-[#334155] text-sm font-semibold text-[#172B3A] dark:text-[#F1F5F9] hover:bg-slate-50 dark:hover:bg-[#111C2E] transition-all"
+                        className="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#E2E8F0] dark:border-[#334155] text-sm font-semibold text-[#172B3A] dark:text-[#F1F5F9] hover:bg-slate-50 dark:hover:bg-[#111C2E] transition-all cursor-pointer"
                     >
                         <FaGithub className="w-5 h-5" />
                         GitHub

@@ -185,7 +185,7 @@ const SignUpPage = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-[#16A34A] hover:bg-[#15803D] disabled:opacity-70 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-2xl transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 text-sm sm:text-base"
+                        className="w-full bg-[#16A34A] hover:bg-[#15803D] disabled:opacity-70 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-2xl transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 text-sm sm:text-base cursor-pointer"
                     >
                         {loading ? 'Creating Account...' : 'Sign Up'}
                         {!loading && <ArrowRight className="w-4 h-4" />}
@@ -201,7 +201,7 @@ const SignUpPage = () => {
                 <div className="grid grid-cols-2 gap-3">
                     <button
                         type="button"
-                        className="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#E2E8F0] dark:border-[#334155] text-sm font-semibold text-[#172B3A] dark:text-[#F1F5F9] hover:bg-slate-50 dark:hover:bg-[#111C2E] transition-all"
+                        className="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#E2E8F0] dark:border-[#334155] text-sm font-semibold text-[#172B3A] dark:text-[#F1F5F9] hover:bg-slate-50 dark:hover:bg-[#111C2E] transition-all cursor-pointer"
                     >
                         <FcGoogle className="w-5 h-5" />
                         Google
@@ -209,7 +209,7 @@ const SignUpPage = () => {
 
                     <button
                         type="button"
-                        className="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#E2E8F0] dark:border-[#334155] text-sm font-semibold text-[#172B3A] dark:text-[#F1F5F9] hover:bg-slate-50 dark:hover:bg-[#111C2E] transition-all"
+                        className="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#E2E8F0] dark:border-[#334155] text-sm font-semibold text-[#172B3A] dark:text-[#F1F5F9] hover:bg-slate-50 dark:hover:bg-[#111C2E] transition-all cursor-pointer"
                     >
                         <FaGithub className="w-5 h-5" />
                         GitHub

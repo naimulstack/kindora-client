@@ -17,6 +17,7 @@ import Link from 'next/link';
 import { useTheme } from './theme-provider';
 import { authClient } from '@/lib/auth-client';
 import { usePathname } from 'next/navigation';
+import { toast } from "react-hot-toast";
 
 const UserAvatar = ({ user, className = "w-10 h-10" }) => {
 
@@ -59,9 +60,15 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
   };
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     closeMenus();
-    authClient.signOut();
+
+    try {
+      await authClient.signOut();
+      toast.success("Logged out successfully!");
+    } catch (error) {
+      toast.error("Logout failed!");
+    }
   };
 
   return (
