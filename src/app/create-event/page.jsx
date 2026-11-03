@@ -14,8 +14,9 @@ import {
     CheckCircle2,
     Clock
 } from 'lucide-react';
+import Link from 'next/link';
 
-const CreateEventPage = ({ onBack, user }) => {
+const CreateEventPage = ({ user }) => {
     const getTodayDate = () => {
         const today = new Date();
         const year = today.getFullYear();
@@ -71,16 +72,17 @@ const CreateEventPage = ({ onBack, user }) => {
     return (
         <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] py-8 px-4 sm:px-6 lg:px-12 transition-colors duration-200">
             <div className="max-w-7xl mx-auto space-y-6">
-                
+
                 {/* Navigation & Header Section */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E2E8F0] dark:border-[#334155]">
                     <div>
-                        <button
-                            onClick={onBack}
+                        <Link
+                            href="/"
                             className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#16A34A] dark:text-[#22C55E] hover:underline mb-2"
                         >
-                            <ArrowLeft className="w-3.5 h-3.5" /> Back to Dashboard
-                        </button>
+                            <ArrowLeft className="w-3.5 h-3.5" />
+                            Back to Dashboard
+                        </Link>
                         <h1 className="text-2xl sm:text-3xl font-extrabold text-[#172B3A] dark:text-[#F1F5F9] flex items-center gap-3">
                             Host a Community Drive <Sparkles className="w-6 h-6 text-[#16A34A]" />
                         </h1>
@@ -97,10 +99,10 @@ const CreateEventPage = ({ onBack, user }) => {
 
                 {/* Two-Column Grid Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                    
+
                     {/* Left Column: Input Form */}
                     <form onSubmit={handleSubmit} className="lg:col-span-7 space-y-6">
-                        
+
                         {/* Step 1: Core Details */}
                         <div className="bg-white dark:bg-[#1E293B] p-6 sm:p-8 rounded-3xl border border-[#E2E8F0] dark:border-[#334155] shadow-sm space-y-5">
                             <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
@@ -299,11 +301,11 @@ const CreateEventPage = ({ onBack, user }) => {
                             <div className="p-6 space-y-4">
                                 <div className="flex items-center gap-4 text-xs text-[#64748B] dark:text-[#CBD5E1]">
                                     <span className="flex items-center gap-1 text-[#16A34A] font-semibold">
-                                        <Calendar className="w-3.5 h-3.5" /> 
+                                        <Calendar className="w-3.5 h-3.5" />
                                         {formData.date}
                                     </span>
                                     <span className="flex items-center gap-1 truncate max-w-[150px]">
-                                        <MapPin className="w-3.5 h-3.5 text-[#16A34A]" /> 
+                                        <MapPin className="w-3.5 h-3.5 text-[#16A34A]" />
                                         {formData.location || 'Location venue'}
                                     </span>
                                 </div>

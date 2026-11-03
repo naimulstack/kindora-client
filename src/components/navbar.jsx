@@ -146,7 +146,7 @@ const Navbar = () => {
                           <Calendar className="w-4 h-4" /> Manage Events
                         </Link>
                         <Link
-                          href="#joined-events"
+                          href="/joined-events"
                           onClick={() => setIsProfileOpen(false)}
                           className="flex items-center gap-2.5 px-4 py-2 text-sm text-[#334155] dark:text-[#CBD5E1] hover:bg-[#F0FDF4] dark:hover:bg-[#334155] hover:text-[#16A34A] dark:hover:text-[#22C55E]"
                         >
@@ -231,7 +231,7 @@ const Navbar = () => {
                 <PlusCircle className="w-4 h-4" /> Create Event
               </Link>
               <Link
-                href="#manage-events"
+                href="/joined-events"
                 onClick={closeMenus}
                 className="flex items-center justify-center gap-2 w-full border border-[#E2E8F0] dark:border-[#334155] text-[#172B3A] dark:text-[#F1F5F9] py-2.5 rounded-xl font-medium"
               >
