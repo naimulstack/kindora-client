@@ -10,31 +10,30 @@ const UpcomingEvents = () => {
 
     useEffect(() => {
         const fetchEvents = async () => {
-            try {
-                const response = await fetch('http://localhost:5000/homepage-event');
-                const data = await response.json();
-                setEvents(data);
-            } catch (err) {
-                console.error("Failed to fetch events:", err);
-            }
+            const response = await fetch('http://localhost:5000/homepage-event');
+            const data = await response.json();
+            setEvents(data);
         };
 
         fetchEvents();
     }, []);
 
     return (
-        <section className="py-12 px-4 sm:px-6 lg:px-12 bg-[#F8FAFC] dark:bg-[#0F172A] transition-colors duration-200">
+        <section className="py-12 px-4 sm:px-6 lg:px-12 dark:bg-[#0F172A] transition-colors duration-200">
             <div className="max-w-6xl mx-auto space-y-8">
 
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div className="space-y-1">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-slate-200 dark:border-slate-800 pb-6">
+                    <div className="space-y-2 max-w-2xl">
                         <span className="inline-flex items-center gap-1.5 bg-[#F0FDF4] dark:bg-emerald-950/60 text-[#16A34A] dark:text-[#22C55E] text-xs font-bold px-3 py-1 rounded-full">
                             <Sparkles className="w-3.5 h-3.5" /> Make an Impact
                         </span>
-                        <h2 className="text-2xl sm:text-3xl font-extrabold text-[#172B3A] dark:text-[#F1F5F9] tracking-tight">
-                            Upcoming Events
+                        <h2 className="text-2xl sm:text-4xl font-extrabold text-[#172B3A] dark:text-[#F1F5F9] tracking-tight">
+                            Join Our Charity Campaigns
                         </h2>
+                        <p className="text-xs sm:text-sm text-[#64748B] dark:text-[#CBD5E1] leading-relaxed">
+                            Explore hands-on social initiatives near you. Join as a volunteer or contribute to upcoming food distributions, medical camps, and green campaigns.
+                        </p>
                     </div>
 
                     <Link
@@ -56,7 +55,7 @@ const UpcomingEvents = () => {
                                 {/* Image Container */}
                                 <div className="relative h-48 overflow-hidden bg-slate-100 dark:bg-slate-800">
                                     <Image
-                                        src={event.image || 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&q=80&w=800'}
+                                        src={event.image}
                                         alt={event.title}
                                         width={800}
                                         height={500}
