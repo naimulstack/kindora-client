@@ -1,31 +1,26 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
-  reactCompiler: true,
+    cacheComponents: true,
+    partialPrefetching: true,
+    reactCompiler: true,
 
-  turbopack: {
-    rules: {
-      "*.css": {
-        loaders: ["@tailwindcss/turbopack"],
-        as: "*.css",
-      },
+    turbopack: {
+        rules: {
+            "*.css": {
+                loaders: ["@tailwindcss/turbopack"],
+                as: "*.css",
+            },
+        },
     },
-  },
 
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
-      {
-        protocol: "https",
-        hostname: "plus.unsplash.com",
-      },
-    ],
-  },
+    images: {
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "**",
+            },
+        ],
+    },
 };
 
 export default nextConfig;

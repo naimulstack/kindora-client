@@ -63,7 +63,6 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
 
-          {/* Left: Brand Logo */}
           <Link
             href="/"
             className="flex items-center gap-3 cursor-pointer"
@@ -72,7 +71,6 @@ const Navbar = () => {
             <Image src={Logo} alt="Kindora Logo" width={180} height={80} />
           </Link>
 
-          {/* Center: Navigation */}
           <div className="hidden md:flex items-center gap-8">
             <Link
               href="/events"
@@ -83,9 +81,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Right: Theme Toggle & Authentication */}
           <div className="hidden md:flex items-center gap-3">
-            {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
               className="p-2.5 rounded-full bg-[#F0FDF4] dark:bg-[#1E293B] text-[#15803D] dark:text-[#22C55E] hover:bg-emerald-100 dark:hover:bg-[#334155] transition-all"
@@ -95,7 +91,6 @@ const Navbar = () => {
             </button>
 
             {isPending ? null : !isLoggedIn ? (
-              /* Signed Out */
               <Link
                 href="/sign-in"
                 className="bg-[#16A34A] hover:bg-[#15803D] text-white font-medium text-sm px-5 py-2.5 rounded-xl transition-all shadow-sm hover:shadow-emerald-600/20"
@@ -103,7 +98,6 @@ const Navbar = () => {
                 Sign In
               </Link>
             ) : (
-              /* Signed In: Profile Dropdown + Sign Out Button */
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <button
@@ -238,7 +232,7 @@ const Navbar = () => {
                 <Calendar className="w-4 h-4" /> Manage Events
               </Link>
               <Link
-                href="#joined-events"
+                href="/joined-events"
                 onClick={closeMenus}
                 className="flex items-center justify-center gap-2 w-full border border-[#E2E8F0] dark:border-[#334155] text-[#172B3A] dark:text-[#F1F5F9] py-2.5 rounded-xl font-medium"
               >

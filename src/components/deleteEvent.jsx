@@ -20,8 +20,14 @@ const DeleteEventPage = ({ eventId }) => {
     const router = useRouter();
 
     const handleDelete = async () => {
+        const id = typeof eventId === 'object' ? eventId?._id : eventId;
+        if (!id) {
+            toast.error("Invalid event ID!");
+            return;
+        }
+
         const res = await fetch(
-            `http://localhost:5000/events/${eventId._id}`,
+            `http://localhost:5000/events/${id}`,
             {
                 method: "DELETE",
             }
@@ -55,7 +61,7 @@ const DeleteEventPage = ({ eventId }) => {
                     </AlertDialogTitle>
 
                     <AlertDialogDescription className="text-xs sm:text-sm text-[#64748B] dark:text-[#CBD5E1] text-center sm:text-left leading-relaxed">
-                        This action cannot be undone. This will permanently remove your event from the Kindora.
+                        This action cannot be undone. This will permanently remove your event from Kindora.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
 

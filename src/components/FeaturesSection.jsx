@@ -1,4 +1,3 @@
-import React from 'react';
 import { CalendarPlus, Users, HeartHandshake, ChartNoAxesCombined } from 'lucide-react';
 
 const FeaturesSection = () => {

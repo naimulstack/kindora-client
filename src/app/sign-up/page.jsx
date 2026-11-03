@@ -41,7 +41,6 @@ const SignUpPage = () => {
         });
 
         if (authError) {
-            console.error(authError);
             setError(authError.message || 'Registration failed. Please check your details.');
             toast.error(authError.message || 'Registration failed');
             setLoading(false);

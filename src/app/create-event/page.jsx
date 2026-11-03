@@ -1,4 +1,5 @@
 'use client';
+
 import { useState } from 'react';
 import {
     ArrowLeft,
@@ -15,8 +16,16 @@ import {
     Clock
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
+import { authClient } from '@/lib/auth-client';
 
-const CreateEventPage = ({ user }) => {
+const CreateEventPage = () => {
+    const router = useRouter();
+    const { data: session, isPending } = authClient.useSession();
+    const user = session?.user;
+
     const getTodayDate = () => {
         const today = new Date();
         const year = today.getFullYear();
@@ -32,8 +41,9 @@ const CreateEventPage = ({ user }) => {
         location: '',
         image: '',
         description: '',
-        organizerEmail: user?.email || 'mypit@mailinator.com'
     });
+
+    const [loading, setLoading] = useState(false);
 
     const photoPresets = [
         { label: 'Winter Clothes', url: 'https://plus.unsplash.com/premium_photo-1661964021703-59bbdcdbfdab?auto=format&fit=crop&q=80&w=800' },
@@ -46,40 +56,51 @@ const CreateEventPage = ({ user }) => {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-
     const handlePresetClick = (url) => {
         setFormData({ ...formData, image: url });
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Event Created:", formData);
-        try {
-            const response = await fetch('http://localhost:5000/create-event', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-            const result = await response.json();
-            console.log("Server Response:", result);
-        } catch (err) {
-            console.error("Submission failed:", err);
+
+        if (!user?.email) {
+            toast.error('Please sign in first!');
+            router.push('/sign-in');
+            return;
         }
+
+        setLoading(true);
+
+        const data = {
+            ...formData,
+            organizerEmail: user.email
+        };
+
+        const response = await fetch('http://localhost:5000/create-event', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            toast.success('Event created successfully!');
+            router.push('/events');
+            router.refresh();
+        } else {
+            toast.error('Failed to create event!');
+        }
+        
+        setLoading(false);
     };
 
     return (
         <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] py-8 px-4 sm:px-6 lg:px-12 transition-colors duration-200">
             <div className="max-w-7xl mx-auto space-y-6">
 
-                {/* Navigation & Header Section */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E2E8F0] dark:border-[#334155]">
                     <div>
-                        <Link
-                            href="/"
-                            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#16A34A] dark:text-[#22C55E] hover:underline mb-2"
-                        >
+                        <Link href="/" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#16A34A] dark:text-[#22C55E] hover:underline mb-2">
                             <ArrowLeft className="w-3.5 h-3.5" />
                             Back to Dashboard
                         </Link>
@@ -92,25 +113,23 @@ const CreateEventPage = ({ user }) => {
                         <Mail className="w-4 h-4 text-[#16A34A]" />
                         <div className="text-xs">
                             <p className="text-[#64748B] dark:text-[#CBD5E1]">Organizing as</p>
-                            <p className="font-bold text-[#172B3A] dark:text-[#F1F5F9]">{formData.organizerEmail}</p>
+                            <p className="font-bold text-[#172B3A] dark:text-[#F1F5F9]">
+                                {isPending ? 'Loading...' : user?.email || 'Not logged in'}
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                {/* Two-Column Grid Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-                    {/* Left Column: Input Form */}
                     <form onSubmit={handleSubmit} className="lg:col-span-7 space-y-6">
 
-                        {/* Step 1: Core Details */}
                         <div className="bg-white dark:bg-[#1E293B] p-6 sm:p-8 rounded-3xl border border-[#E2E8F0] dark:border-[#334155] shadow-sm space-y-5">
                             <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
                                 <span className="w-7 h-7 rounded-full bg-[#16A34A] text-white flex items-center justify-center text-xs font-bold">1</span>
                                 <h2 className="text-lg font-bold text-[#172B3A] dark:text-[#F1F5F9]">Event Details</h2>
                             </div>
 
-                            {/* Title */}
                             <div>
                                 <label className="block text-xs font-bold uppercase tracking-wider text-[#172B3A] dark:text-[#F1F5F9] mb-2">
                                     Event Title <span className="text-red-500">*</span>
@@ -123,13 +142,12 @@ const CreateEventPage = ({ user }) => {
                                         value={formData.title}
                                         onChange={handleChange}
                                         placeholder="e.g. Winter Clothes Distribution – Mirpur 10"
-                                        className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-[#111C2E] border border-[#E2E8F0] dark:border-[#334155] focus:border-[#16A34A] dark:focus:border-[#22C55E] rounded-xl text-sm text-[#172B3A] dark:text-[#F1F5F9] focus:outline-none transition-colors"
+                                        className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-[#111C2E] border border-[#E2E8F0] dark:border-[#334155] focus:border-[#16A34A] rounded-xl text-sm text-[#172B3A] dark:text-[#F1F5F9] focus:outline-none"
                                         required
                                     />
                                 </div>
                             </div>
 
-                            {/* Type & Date */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-xs font-bold uppercase tracking-wider text-[#172B3A] dark:text-[#F1F5F9] mb-2">
@@ -141,7 +159,7 @@ const CreateEventPage = ({ user }) => {
                                             name="type"
                                             value={formData.type}
                                             onChange={handleChange}
-                                            className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-[#111C2E] border border-[#E2E8F0] dark:border-[#334155] focus:border-[#16A34A] rounded-xl text-sm text-[#172B3A] dark:text-[#F1F5F9] focus:outline-none"
+                                            className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-[#111C2E] border border-[#E2E8F0] dark:border-[#334155] rounded-xl text-sm text-[#172B3A] dark:text-[#F1F5F9] focus:outline-none"
                                         >
                                             <option value="Donation">Donation</option>
                                             <option value="Tree Plantation">Tree Plantation</option>
@@ -155,31 +173,28 @@ const CreateEventPage = ({ user }) => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-bold uppercase tracking-wider text-[#172B3A] dark:text-[#F1F5F9] mb-2 flex items-center justify-between">
-                                        <span>Event Date <span className="text-red-500">*</span></span>
-                                        <span className="text-[10px] lowercase text-[#16A34A] dark:text-[#22C55E] bg-[#F0FDF4] dark:bg-emerald-950/50 px-2 py-0.5 rounded-md font-semibold">default: today</span>
+                                    <label className="block text-xs font-bold uppercase tracking-wider text-[#172B3A] dark:text-[#F1F5F9] mb-2">
+                                        Event Date <span className="text-red-500">*</span>
                                     </label>
-                                    <div className="relative group">
-                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#16A34A]">
-                                            <Calendar className="w-4 h-4" />
-                                        </div>
+                                    <div className="relative">
+                                        <Calendar className="w-4 h-4 text-[#16A34A] absolute left-4 top-3.5" />
                                         <input
                                             type="date"
                                             name="date"
                                             value={formData.date}
                                             min={getTodayDate()}
                                             onChange={handleChange}
-                                            className="w-full pl-11 pr-4 py-3 bg-[#F0FDF4]/50 dark:bg-[#111C2E] border-2 border-emerald-500/30 hover:border-[#16A34A] focus:border-[#16A34A] rounded-xl text-sm font-medium text-[#172B3A] dark:text-[#F1F5F9] focus:outline-none transition-all shadow-sm cursor-pointer"
+                                            className="w-full pl-11 pr-4 py-3 bg-[#F0FDF4]/50 dark:bg-[#111C2E] border border-emerald-500/30 rounded-xl text-sm text-[#172B3A] dark:text-[#F1F5F9] focus:outline-none"
                                             required
                                         />
                                     </div>
                                     <p className="text-[11px] text-[#64748B] dark:text-[#CBD5E1] mt-1 flex items-center gap-1">
-                                        <Clock className="w-3 h-3 text-[#16A34A]" /> Must be scheduled for today or later.
+                                        <Clock className="w-3 h-3 text-[#16A34A]" />
+                                        Must be scheduled for today or later.
                                     </p>
                                 </div>
                             </div>
 
-                            {/* Location */}
                             <div>
                                 <label className="block text-xs font-bold uppercase tracking-wider text-[#172B3A] dark:text-[#F1F5F9] mb-2">
                                     Venue / Location <span className="text-red-500">*</span>
@@ -192,21 +207,19 @@ const CreateEventPage = ({ user }) => {
                                         value={formData.location}
                                         onChange={handleChange}
                                         placeholder="e.g. Mohammadpur Town Hall, Dhaka"
-                                        className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-[#111C2E] border border-[#E2E8F0] dark:border-[#334155] focus:border-[#16A34A] rounded-xl text-sm text-[#172B3A] dark:text-[#F1F5F9] focus:outline-none"
+                                        className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-[#111C2E] border border-[#E2E8F0] dark:border-[#334155] rounded-xl text-sm text-[#172B3A] dark:text-[#F1F5F9] focus:outline-none"
                                         required
                                     />
                                 </div>
                             </div>
                         </div>
 
-                        {/* Step 2: Media & Description */}
                         <div className="bg-white dark:bg-[#1E293B] p-6 sm:p-8 rounded-3xl border border-[#E2E8F0] dark:border-[#334155] shadow-sm space-y-5">
                             <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
                                 <span className="w-7 h-7 rounded-full bg-[#16A34A] text-white flex items-center justify-center text-xs font-bold">2</span>
                                 <h2 className="text-lg font-bold text-[#172B3A] dark:text-[#F1F5F9]">Media & Overview</h2>
                             </div>
 
-                            {/* Image Input */}
                             <div>
                                 <label className="block text-xs font-bold uppercase tracking-wider text-[#172B3A] dark:text-[#F1F5F9] mb-2">
                                     Cover Photo URL <span className="text-red-500">*</span>
@@ -219,17 +232,16 @@ const CreateEventPage = ({ user }) => {
                                         value={formData.image}
                                         onChange={handleChange}
                                         placeholder="https://images.unsplash.com/photo-..."
-                                        className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-[#111C2E] border border-[#E2E8F0] dark:border-[#334155] focus:border-[#16A34A] rounded-xl text-sm text-[#172B3A] dark:text-[#F1F5F9] focus:outline-none"
+                                        className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-[#111C2E] border border-[#E2E8F0] dark:border-[#334155] rounded-xl text-sm text-[#172B3A] dark:text-[#F1F5F9] focus:outline-none"
                                         required
                                     />
                                 </div>
 
-                                {/* Chips Presets */}
                                 <div className="flex flex-wrap items-center gap-1.5 mt-3">
                                     <span className="text-xs text-[#64748B] dark:text-[#CBD5E1] mr-1">Quick Select:</span>
-                                    {photoPresets.map((preset, idx) => (
+                                    {photoPresets.map((preset) => (
                                         <button
-                                            key={idx}
+                                            key={preset.label}
                                             type="button"
                                             onClick={() => handlePresetClick(preset.url)}
                                             className="px-2.5 py-1 text-xs rounded-full bg-[#F0FDF4] dark:bg-[#111C2E] border border-[#16A34A]/30 text-[#16A34A] dark:text-[#22C55E] hover:bg-[#16A34A] hover:text-white transition-all"
@@ -240,7 +252,6 @@ const CreateEventPage = ({ user }) => {
                                 </div>
                             </div>
 
-                            {/* Description */}
                             <div>
                                 <label className="block text-xs font-bold uppercase tracking-wider text-[#172B3A] dark:text-[#F1F5F9] mb-2">
                                     Event Description <span className="text-red-500">*</span>
@@ -251,23 +262,23 @@ const CreateEventPage = ({ user }) => {
                                     value={formData.description}
                                     onChange={handleChange}
                                     placeholder="Outline volunteer requirements, goals, items distributed..."
-                                    className="w-full p-4 bg-slate-50 dark:bg-[#111C2E] border border-[#E2E8F0] dark:border-[#334155] focus:border-[#16A34A] rounded-xl text-sm text-[#172B3A] dark:text-[#F1F5F9] focus:outline-none"
+                                    className="w-full p-4 bg-slate-50 dark:bg-[#111C2E] border border-[#E2E8F0] dark:border-[#334155] rounded-xl text-sm text-[#172B3A] dark:text-[#F1F5F9] focus:outline-none"
                                     required
-                                ></textarea>
+                                />
                             </div>
                         </div>
 
-                        {/* Action Submit */}
                         <button
                             type="submit"
-                            className="w-full bg-[#16A34A] hover:bg-[#15803D] text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 text-base"
+                            disabled={loading || isPending}
+                            className="w-full bg-[#16A34A] hover:bg-[#15803D] text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 text-base disabled:opacity-60"
                         >
-                            <PlusCircle className="w-5 h-5" /> Launch Community Drive
+                            <PlusCircle className="w-5 h-5" />
+                            {loading ? 'Creating Event...' : 'Launch Community Drive'}
                         </button>
 
                     </form>
 
-                    {/* Right Column: Live Interactive Preview Card */}
                     <div className="lg:col-span-5 sticky top-24 space-y-4">
                         <div className="flex items-center justify-between px-2">
                             <span className="text-xs font-bold uppercase tracking-wider text-[#64748B] dark:text-[#CBD5E1] flex items-center gap-1.5">
@@ -278,14 +289,15 @@ const CreateEventPage = ({ user }) => {
                             </span>
                         </div>
 
-                        {/* Card Widget */}
-                        <div className="bg-white dark:bg-[#1E293B] rounded-3xl overflow-hidden border border-[#E2E8F0] dark:border-[#334155] shadow-lg transition-all">
+                        <div className="bg-white dark:bg-[#1E293B] rounded-3xl overflow-hidden border border-[#E2E8F0] dark:border-[#334155] shadow-lg">
                             <div className="relative h-48 bg-slate-100 dark:bg-[#111C2E] flex items-center justify-center overflow-hidden">
                                 {formData.image ? (
-                                    <img
+                                    <Image
                                         src={formData.image}
                                         alt="Event Preview"
-                                        className="w-full h-full object-cover"
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, 40vw"
+                                        className="object-cover"
                                     />
                                 ) : (
                                     <div className="text-center text-[#94A3B8] p-4">
@@ -293,8 +305,8 @@ const CreateEventPage = ({ user }) => {
                                         <p className="text-xs">Provide a photo URL or click a preset</p>
                                     </div>
                                 )}
-                                <span className="absolute top-4 left-4 bg-white/90 dark:bg-[#1E293B]/90 backdrop-blur-sm text-[#16A34A] dark:text-[#22C55E] text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                                    {formData.type || 'Donation'}
+                                <span className="absolute top-4 left-4 bg-white/90 dark:bg-[#1E293B]/90 text-[#16A34A] dark:text-[#22C55E] text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                                    {formData.type}
                                 </span>
                             </div>
 
@@ -326,11 +338,9 @@ const CreateEventPage = ({ user }) => {
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                 </div>
-
             </div>
         </div>
     );

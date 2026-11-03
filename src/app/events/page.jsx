@@ -15,6 +15,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 
+
 const EventsPage = ({ onNavigateToCreate }) => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,37 +23,33 @@ const EventsPage = ({ onNavigateToCreate }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const getTodayDateString = () => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return today;
-  };
-
   const fetchEvents = async () => {
     setLoading(true);
     setError(null);
+
     try {
       const response = await fetch('http://localhost:5000/events');
-      if (!response.ok) {
-        throw new Error('Failed to fetch events from server');
-      }
       const data = await response.json();
 
-      const today = getTodayDateString();
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-      const upcomingOnly = data.filter((event) => {
-        if (!event.date) return false;
-        const eventDate = new Date(event.date);
-        eventDate.setHours(0, 0, 0, 0);
-        return eventDate >= today;
-      });
+      const upcomingEvents = data
+        .filter((event) => {
+          if (!event.date) return false;
 
-      upcomingOnly.sort((a, b) => new Date(a.date) - new Date(b.date));
+          const eventDate = new Date(event.date);
+          eventDate.setHours(0, 0, 0, 0);
 
-      setEvents(upcomingOnly);
+          return eventDate >= today;
+        })
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      setEvents(upcomingEvents);
+
     } catch (err) {
-      console.error('Error loading events:', err);
-      setError(err.message || 'Unable to connect to http://localhost:5000/events');
+      console.error(err);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
@@ -62,12 +59,13 @@ const EventsPage = ({ onNavigateToCreate }) => {
     fetchEvents();
   }, []);
 
-  // Filter events by Search & Category dropdown
   const filteredEvents = events.filter((event) => {
+    const search = searchQuery.toLowerCase();
+
     const matchesSearch =
-      event.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      event.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      event.description?.toLowerCase().includes(searchQuery.toLowerCase());
+      event.title?.toLowerCase().includes(search) ||
+      event.location?.toLowerCase().includes(search) ||
+      event.description?.toLowerCase().includes(search);
 
     const matchesCategory =
       selectedCategory === 'All' || event.type === selectedCategory;

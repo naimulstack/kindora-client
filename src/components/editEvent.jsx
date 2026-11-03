@@ -11,6 +11,7 @@ import {
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 import {
     Pencil,
@@ -31,11 +32,8 @@ const EditEventPage = ({ eventData }) => {
 
     const getTodayDate = () => {
         const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, "0");
-        const day = String(today.getDate()).padStart(2, "0");
 
-        return `${year}-${month}-${day}`;
+        return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
     };
 
     const [formData, setFormData] = useState({
@@ -73,45 +71,47 @@ const EditEventPage = ({ eventData }) => {
     ];
 
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-    };
+        const { name, value } = e.target;
 
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
     const handlePresetClick = (url) => {
-        setFormData({
-            ...formData,
+        setFormData((prev) => ({
+            ...prev,
             image: url,
-        });
+        }));
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            const response = await fetch(
-                `http://localhost:5000/events/${eventData._id}`,
-                {
-                    method: "PATCH",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(formData),
-                }
-            );
+            const id = eventData?._id;
 
+            if (!id) {
+                toast.error("Invalid event ID!");
+                return;
+            }
+            const response = await fetch(`http://localhost:5000/events/${id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
             if (!response.ok) {
-                throw new Error("Event update failed");
+                throw new Error("Event update failed!");
             }
 
+            toast.success("Event updated successfully!");
             setOpen(false);
             router.refresh();
 
         } catch (error) {
-            console.error(error);
-            alert("Event update failed!");
+            toast.error(error.message || "Something went wrong!");
         } finally {
             setLoading(false);
         }
@@ -119,13 +119,11 @@ const EditEventPage = ({ eventData }) => {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger
-                render={
-                    <button className="p-2.5 rounded-2xl bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] text-[#64748B] hover:text-[#16A34A] transition-all">
-                        <Pencil className="w-4 h-4" />
-                    </button>
-                }
-            />
+            <DialogTrigger asChild>
+                <button className="p-2.5 rounded-2xl bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] text-[#64748B] hover:text-[#16A34A] transition-all">
+                    <Pencil className="w-4 h-4" />
+                </button>
+            </DialogTrigger>
 
             <DialogContent className="w-[95vw] max-h-[90vh] overflow-y-auto bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-3xl p-6 sm:p-10 shadow-2xl max-w-7xl min-w-2xl">
                 <DialogHeader className="space-y-2 pb-4 border-b border-slate-100 dark:border-slate-800">

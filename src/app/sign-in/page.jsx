@@ -25,19 +25,13 @@ const SignInPage = () => {
 
     const handleSignIn = async (e) => {
         e.preventDefault();
-
-        const { data, error } = await authClient.signIn.email({
-            ...formData,
-        });
-
+        const { error } = await authClient.signIn.email(formData);
+        
         if (error) {
             console.log(error);
             return;
         }
-
-        if (data) {
-            router.push("/");
-        }
+        router.push("/");
     };
 
     return (

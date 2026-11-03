@@ -1,6 +1,3 @@
-
-'use client';
-
 import {
     CalendarDays,
     MapPin,
@@ -12,10 +9,19 @@ import {
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
-const JoinedEventsPage = () => {
+const JoinedEventsPage = async () => {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+    const user = session?.user;
 
-    const joinedEvents = [];
+    const res = await fetch(`http://localhost:5000/joined-events/${user?.email}`, {
+        cache: 'no-store'
+    });
+    const joinedEvents = await res.json();
 
     return (
         <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] py-10 px-4 sm:px-6 lg:px-12 transition-colors duration-200">
@@ -40,22 +46,22 @@ const JoinedEventsPage = () => {
                     </div>
 
                     <div className="bg-[#F0FDF4] dark:bg-emerald-950/40 border border-emerald-500/30 px-5 py-3 rounded-2xl text-center">
-                        <p className="text-[10px] uppercase font-bold text-[#16A34A] tracking-wider">
+                        <p className="text-[10px] uppercase font-bold text-[#16A34A] dark:text-[#22C55E] tracking-wider">
                             Total Joined
                         </p>
 
                         <p className="text-2xl font-extrabold text-[#172B3A] dark:text-[#F1F5F9]">
-                            {joinedEvents.length}
+                            {joinedEvents?.length || 0}
                         </p>
                     </div>
                 </div>
 
                 {/* Events Grid or Empty State */}
-                {joinedEvents.length === 0 ? (
+                {!joinedEvents || joinedEvents.length === 0 ? (
 
                     <div className="bg-white dark:bg-[#1E293B] p-12 rounded-3xl border border-[#E2E8F0] dark:border-[#334155] text-center space-y-4 shadow-sm max-w-lg mx-auto my-12">
 
-                        <div className="w-16 h-16 rounded-2xl bg-[#F0FDF4] dark:bg-emerald-950/50 text-[#16A34A] flex items-center justify-center mx-auto">
+                        <div className="w-16 h-16 rounded-2xl bg-[#F0FDF4] dark:bg-emerald-950/50 text-[#16A34A] dark:text-[#22C55E] flex items-center justify-center mx-auto">
                             <Calendar className="w-8 h-8" />
                         </div>
 
@@ -93,7 +99,7 @@ const JoinedEventsPage = () => {
 
                                         <Image
                                             src={event.image || 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&q=80&w=800'}
-                                            alt={event.title}
+                                            alt={event.title || 'Event Image'}
                                             fill
                                             sizes="(max-width: 768px) 100vw, 33vw"
                                             className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -107,7 +113,7 @@ const JoinedEventsPage = () => {
                                         </div>
 
                                         <div className="absolute top-4 right-4">
-                                            <span className="inline-flex items-center gap-1 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-[#16A34A] text-[11px] font-bold px-3 py-1 rounded-full shadow-sm">
+                                            <span className="inline-flex items-center gap-1 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-[#16A34A] dark:text-[#22C55E] text-[11px] font-bold px-3 py-1 rounded-full shadow-sm">
                                                 <CheckCircle2 className="w-3 h-3" />
                                                 Joined
                                             </span>
@@ -117,19 +123,19 @@ const JoinedEventsPage = () => {
                                     {/* Content Info */}
                                     <div className="p-6 space-y-4">
 
-                                        <h3 className="text-lg font-bold text-[#172B3A] dark:text-[#F1F5F9] line-clamp-1 group-hover:text-[#16A34A] transition-colors">
+                                        <h3 className="text-lg font-bold text-[#172B3A] dark:text-[#F1F5F9] line-clamp-1 group-hover:text-[#16A34A] dark:group-hover:text-[#22C55E] transition-colors">
                                             {event.title}
                                         </h3>
 
                                         <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
 
                                             <div className="flex items-center gap-2.5 text-xs text-[#64748B] dark:text-[#CBD5E1]">
-                                                <CalendarDays className="w-4 h-4 text-[#16A34A] shrink-0" />
+                                                <CalendarDays className="w-4 h-4 text-[#16A34A] dark:text-[#22C55E] shrink-0" />
                                                 <span className="font-medium">{event.date}</span>
                                             </div>
 
                                             <div className="flex items-center gap-2.5 text-xs text-[#64748B] dark:text-[#CBD5E1]">
-                                                <MapPin className="w-4 h-4 text-[#16A34A] shrink-0" />
+                                                <MapPin className="w-4 h-4 text-[#16A34A] dark:text-[#22C55E] shrink-0" />
                                                 <span className="truncate">{event.location}</span>
                                             </div>
 
@@ -145,8 +151,8 @@ const JoinedEventsPage = () => {
                                 <div className="p-6 pt-0">
 
                                     <Link
-                                        href={`/events/${event._id}`}
-                                        className="w-full bg-[#F0FDF4] dark:bg-emerald-950/40 hover:bg-[#16A34A] hover:text-white text-[#16A34A] dark:text-[#22C55E] font-bold py-2.5 rounded-xl transition-all text-xs flex items-center justify-center gap-2 border border-[#16A34A]/20"
+                                        href={`/events/${event.eventId}`}
+                                        className="w-full bg-[#F0FDF4] dark:bg-emerald-950/40 hover:bg-[#16A34A] hover:text-white dark:hover:bg-[#16A34A] text-[#16A34A] dark:text-[#22C55E] font-bold py-2.5 rounded-xl transition-all text-xs flex items-center justify-center gap-2 border border-[#16A34A]/20"
                                     >
                                         View Event Details
                                         <ArrowRight className="w-3.5 h-3.5" />
