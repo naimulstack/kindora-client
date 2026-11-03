@@ -19,7 +19,7 @@ const EventDetailPage = async ({ params }) => {
   const res = await fetch(`http://localhost:5000/events/${id}`, { cache: 'no-store' });
   const eventData = await res.json();
   if (!res.ok || !eventData || eventData.message === "Event not found") {
-    
+
     return (
       <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] flex items-center justify-center px-4 py-10">
         <div className="max-w-md w-full bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-3xl p-8 text-center shadow-xl">
@@ -56,8 +56,8 @@ const EventDetailPage = async ({ params }) => {
 
         <div className="relative h-72 sm:h-96 rounded-3xl overflow-hidden shadow-xl border border-[#E2E8F0] dark:border-[#334155] bg-slate-100 dark:bg-[#111C2E]">
           <Image
-            src={eventData?.image || 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&q=80&w=1200'}
-            alt={eventData?.title || 'Event Cover'}
+            src={eventData?.image}
+            alt={eventData?.title}
             width={1200}
             height={800}
             className="w-full h-full object-cover"

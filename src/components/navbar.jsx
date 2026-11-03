@@ -16,8 +16,10 @@ import Logo from './../app/Images/Kindora Charity Logo with Heart and Leaf.png';
 import Link from 'next/link';
 import { useTheme } from './theme-provider';
 import { authClient } from '@/lib/auth-client';
+import { usePathname } from 'next/navigation';
 
 const UserAvatar = ({ user, className = "w-10 h-10" }) => {
+
   const [hasError, setHasError] = useState(false);
   const avatarUrl = user?.image || user?.avatar;
   const initial = user?.name ? user.name.trim().charAt(0).toUpperCase() : 'U';
@@ -39,6 +41,10 @@ const UserAvatar = ({ user, className = "w-10 h-10" }) => {
 };
 
 const Navbar = () => {
+
+  const pathname = usePathname();
+  const isActive = pathname === '/events';
+
   const { isDark, toggleTheme } = useTheme();
   const { data: session, isPending } = authClient.useSession();
 
@@ -74,10 +80,16 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-8">
             <Link
               href="/events"
-              className="text-[#334155] dark:text-[#F1F5F9] hover:text-[#16A34A] dark:hover:text-[#22C55E] font-medium text-sm transition-colors py-2 relative group"
+              className={`font-medium text-sm transition-colors py-2 relative group ${isActive
+                ? "text-[#16A34A] dark:text-[#22C55E]"
+                : "text-[#334155] dark:text-[#F1F5F9] hover:text-[#16A34A] dark:hover:text-[#22C55E]"
+                }`}
             >
               Upcoming Events
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#16A34A] dark:bg-[#22C55E] transition-all group-hover:w-full"></span>
+              <span
+                className={`absolute bottom-0 left-0 h-0.5 bg-[#16A34A] dark:bg-[#22C55E] transition-all ${isActive ? "w-full" : "w-0 group-hover:w-full"
+                  }`}
+              ></span>
             </Link>
           </div>
 
@@ -133,7 +145,7 @@ const Navbar = () => {
                           <PlusCircle className="w-4 h-4" /> Create Event
                         </Link>
                         <Link
-                          href="#manage-events"
+                          href="/manage-event"
                           onClick={() => setIsProfileOpen(false)}
                           className="flex items-center gap-2.5 px-4 py-2 text-sm text-[#334155] dark:text-[#CBD5E1] hover:bg-[#F0FDF4] dark:hover:bg-[#334155] hover:text-[#16A34A] dark:hover:text-[#22C55E]"
                         >
@@ -225,7 +237,7 @@ const Navbar = () => {
                 <PlusCircle className="w-4 h-4" /> Create Event
               </Link>
               <Link
-                href="/joined-events"
+                href="/manage-event"
                 onClick={closeMenus}
                 className="flex items-center justify-center gap-2 w-full border border-[#E2E8F0] dark:border-[#334155] text-[#172B3A] dark:text-[#F1F5F9] py-2.5 rounded-xl font-medium"
               >

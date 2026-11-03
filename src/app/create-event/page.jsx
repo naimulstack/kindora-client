@@ -90,7 +90,7 @@ const CreateEventPage = () => {
         } else {
             toast.error('Failed to create event!');
         }
-        
+
         setLoading(false);
     };
 
@@ -168,6 +168,7 @@ const CreateEventPage = () => {
                                             <option value="Blood Donation">Blood Donation</option>
                                             <option value="Food Distribution">Food Distribution</option>
                                             <option value="Medical Camp">Medical Camp</option>
+                                            <option value="Others">Others</option>
                                         </select>
                                     </div>
                                 </div>

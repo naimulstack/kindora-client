@@ -45,7 +45,7 @@ const DeleteEventPage = ({ eventId }) => {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <button className="p-2.5 rounded-2xl bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] text-[#64748B] hover:text-red-500 hover:border-red-200 transition-all">
+                <button className="p-2.5 rounded-2xl bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] text-[#64748B] hover:text-red-500 hover:border-red-500 transition-all">
                     <Trash2 className="w-4 h-4" />
                 </button>
             </AlertDialogTrigger>

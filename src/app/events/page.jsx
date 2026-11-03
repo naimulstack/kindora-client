@@ -81,7 +81,8 @@ const EventsPage = ({ onNavigateToCreate }) => {
     'Educational Support',
     'Blood Donation',
     'Food Distribution',
-    'Medical Camp'
+    'Medical Camp',
+    'Others'
   ];
 
   return (
