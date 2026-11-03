@@ -53,7 +53,21 @@ const SignUpPage = () => {
             router.refresh();
         }
         setLoading(false);
+
+
     };
+
+    const googleSignIn = async () => {
+        const data = await authClient.signIn.social({
+            provider: "google",
+        });
+    };
+
+    const githubSignIn = async () => {
+        const data = await authClient.signIn.social({
+            provider: "github"
+        })
+    }
 
     return (
         <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] py-12 px-4 flex items-center justify-center">
@@ -200,6 +214,7 @@ const SignUpPage = () => {
 
                 <div className="grid grid-cols-2 gap-3">
                     <button
+                        onClick={googleSignIn}
                         type="button"
                         className="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#E2E8F0] dark:border-[#334155] text-sm font-semibold text-[#172B3A] dark:text-[#F1F5F9] hover:bg-slate-50 dark:hover:bg-[#111C2E] transition-all cursor-pointer"
                     >
@@ -208,6 +223,7 @@ const SignUpPage = () => {
                     </button>
 
                     <button
+                        onClick={githubSignIn}
                         type="button"
                         className="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#E2E8F0] dark:border-[#334155] text-sm font-semibold text-[#172B3A] dark:text-[#F1F5F9] hover:bg-slate-50 dark:hover:bg-[#111C2E] transition-all cursor-pointer"
                     >
