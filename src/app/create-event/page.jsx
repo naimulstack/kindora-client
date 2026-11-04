@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     ArrowLeft,
     Sparkles,
@@ -26,18 +27,12 @@ const CreateEventPage = () => {
     const { data: session, isPending } = authClient.useSession();
     const user = session?.user;
 
-    const getTodayDate = () => {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = String(today.getMonth() + 1).padStart(2, '0');
-        const day = String(today.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    };
+    const [todayDate, setTodayDate] = useState('');
 
     const [formData, setFormData] = useState({
         title: '',
         type: 'Donation',
-        date: getTodayDate(),
+        date: '',
         location: '',
         image: '',
         description: '',
@@ -45,7 +40,22 @@ const CreateEventPage = () => {
 
     const [loading, setLoading] = useState(false);
 
-    const photoPresets = [
+    useEffect(() => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+
+        const currentDate = `${year}-${month}-${day}`;
+
+        setTodayDate(currentDate);
+        setFormData(prev => ({
+            ...prev,
+            date: currentDate
+        }));
+    }, []);
+
+    const Defaultphoto = [
         { label: 'Winter Clothes', url: 'https://plus.unsplash.com/premium_photo-1661964021703-59bbdcdbfdab?auto=format&fit=crop&q=80&w=800' },
         { label: 'Cleanup', url: 'https://plus.unsplash.com/premium_photo-1681483802191-5d56c2bd4695?auto=format&fit=crop&q=80&w=800' },
         { label: 'Tree Plantation', url: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=800' },
@@ -56,9 +66,11 @@ const CreateEventPage = () => {
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+
     const handlePresetClick = (url) => {
         setFormData({ ...formData, image: url });
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -183,7 +195,7 @@ const CreateEventPage = () => {
                                             type="date"
                                             name="date"
                                             value={formData.date}
-                                            min={getTodayDate()}
+                                            min={todayDate}
                                             onChange={handleChange}
                                             className="w-full pl-11 pr-4 py-3 bg-[#F0FDF4]/50 dark:bg-[#111C2E] border border-emerald-500/30 rounded-xl text-sm text-[#172B3A] dark:text-[#F1F5F9] focus:outline-none"
                                             required
@@ -240,7 +252,7 @@ const CreateEventPage = () => {
 
                                 <div className="flex flex-wrap items-center gap-1.5 mt-3">
                                     <span className="text-xs text-[#64748B] dark:text-[#CBD5E1] mr-1">Quick Select:</span>
-                                    {photoPresets.map((preset) => (
+                                    {Defaultphoto.map((preset) => (
                                         <button
                                             key={preset.label}
                                             type="button"

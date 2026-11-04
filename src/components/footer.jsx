@@ -8,8 +8,10 @@ import {
 import Logo from './../app/Images/Kindora Charity Logo with Heart and Leaf.png'
 import Image from 'next/image';
 import Link from "next/link";
+import { connection } from "next/server";
 
-const Footer = () => {
+const Footer = async () => {
+    await connection();
     return (
         <footer className="bg-[#102A20] text-[#CBD5D1] pt-16 pb-8 border-t border-emerald-950">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

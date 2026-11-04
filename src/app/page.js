@@ -1,6 +1,6 @@
+import { Suspense } from "react";
 import BannerPage from "@/components/banner";
 import FeaturesSection from "@/components/FeaturesSection";
-import GalleryPage from "@/components/gallery";
 import NewsletterPage from "@/components/newsletter";
 import PastEvents from "@/components/pastevents";
 import TopVolunteer from "@/components/topVolunteer";
@@ -11,10 +11,15 @@ export default function Home() {
     <main>
       <BannerPage />
       <FeaturesSection />
-      <UpcomingEvents />
-      <PastEvents/>
-      <TopVolunteer/>
-      {/* <GalleryPage /> */}
+      <Suspense fallback={<p>Loading volunteers...</p>}>
+        <UpcomingEvents />
+      </Suspense>
+      <PastEvents />
+
+      <Suspense fallback={<p>Loading volunteers...</p>}>
+        <TopVolunteer />
+      </Suspense>
+
       <NewsletterPage />
     </main>
   );

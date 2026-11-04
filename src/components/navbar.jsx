@@ -1,6 +1,5 @@
 'use client';
-import { useState } from 'react';
-import {
+import { useState, Suspense } from 'react';import {
   Sun,
   Moon,
   Menu,
@@ -271,4 +270,12 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+const NavbarWithSuspense = () => {
+  return (
+    <Suspense fallback={null}>
+      <Navbar />
+    </Suspense>
+  );
+};
+
+export default NavbarWithSuspense;

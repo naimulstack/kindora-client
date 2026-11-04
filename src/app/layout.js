@@ -6,6 +6,7 @@ import Footer from "@/components/footer";
 import SocialLoginToast from "@/components/SocialLoginToast";
 import { ToastContainer } from "react-toastify";
 import { Toaster } from "react-hot-toast";
+import { Suspense } from "react";
 
 const PlusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -23,15 +24,27 @@ export default function RootLayout({ children }) {
       className={`${PlusJakartaSans.className} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <Suspense fallback={null}>
+          <ThemeProvider>
+            <SocialLoginToast />
+            <Navbar />
+            {children}
+            <ToastContainer
+              position="top-center"
+              autoClose={3000}
+              reverseOrder={false}
+            />
+            <Toaster
+              position="top-center"
+              autoClose={3000}
+              reverseOrder={false}
+            />
+          </ThemeProvider>
+        </Suspense>
 
-        <ThemeProvider>
-          <SocialLoginToast />
-          <Navbar />
-          {children}
-          <ToastContainer position="top-center" autoClose={3000} reverseOrder={false}/>
-          <Toaster position="top-center" autoClose={3000} reverseOrder={false} />
-        </ThemeProvider>
-        <Footer />
+        <Suspense fallback={null}>
+          <Footer />
+        </Suspense>
       </body>
     </html>
   );
