@@ -55,16 +55,16 @@ const Footer = () => {
                         <h4 className="text-white font-semibold text-base mb-4">Community</h4>
                         <ul className="space-y-2.5 text-sm">
                             <li>
-                                <Link href="/gallery" className="hover:text-[#F59E0B] transition-colors">Gallery</Link>
-                            </li>
-                            <li>
-                                <Link href="/events" className="hover:text-[#F59E0B] transition-colors">Volunteer</Link>
-                            </li>
-                            <li>
                                 <Link href="/about-us" className="hover:text-[#F59E0B] transition-colors">About Us</Link>
                             </li>
                             <li>
                                 <Link href="/contact-us" className="hover:text-[#F59E0B] transition-colors">Contact Us</Link>
+                            </li>
+                            <li>
+                                <Link href="/gallery" className="hover:text-[#F59E0B] transition-colors">Gallery</Link>
+                            </li>
+                            <li>
+                                <Link href="/success-stories" className="hover:text-[#F59E0B] transition-colors">Success Stories</Link>
                             </li>
                         </ul>
                     </div>

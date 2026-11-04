@@ -16,6 +16,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import DeleteEventPage from "../../components/deleteEvent";
+import EditEventPage from "../../components/editEvent";
 
 const ManageEventsPage = async () => {
     const session = await auth.api.getSession({
@@ -176,17 +177,8 @@ const ManageEventsPage = async () => {
                                     </Link>
 
                                     <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-
-                                        <Link
-                                            href={`/edit-event/${event._id}`}
-                                            className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl border border-[#E2E8F0] dark:border-[#334155] text-[#334155] dark:text-[#CBD5E1] hover:text-[#16A34A] dark:hover:text-[#22C55E] hover:border-[#16A34A]/30 text-xs font-semibold transition-all"
-                                        >
-                                            <Edit3 className="w-4 h-4" />
-                                            Edit Event
-                                        </Link>
-
+                                        <EditEventPage eventData={event} />
                                         <DeleteEventPage eventId={event} />
-
                                     </div>
                                 </div>
                             </div>

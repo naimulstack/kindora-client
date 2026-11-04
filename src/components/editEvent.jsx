@@ -119,11 +119,14 @@ const EditEventPage = ({ eventData }) => {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <button className="p-2.5 rounded-2xl bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] text-[#64748B] hover:text-[#16A34A] transition-all">
-                    <Pencil className="w-4 h-4" />
-                </button>
-            </DialogTrigger>
+            <DialogTrigger
+                render={
+                    <button className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl border border-[#E2E8F0] dark:border-[#334155] text-[#334155] dark:text-[#CBD5E1] hover:text-[#16A34A] dark:hover:text-[#22C55E] hover:border-[#16A34A]/30 text-xs font-semibold transition-all">
+                        <Pencil className="w-4 h-4" />
+                        Edit Event
+                    </button>
+                }
+            />
 
             <DialogContent className="w-[95vw] max-h-[90vh] overflow-y-auto bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-3xl p-6 sm:p-10 shadow-2xl max-w-7xl min-w-2xl">
                 <DialogHeader className="space-y-2 pb-4 border-b border-slate-100 dark:border-slate-800">
