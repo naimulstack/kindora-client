@@ -7,7 +7,7 @@ import { FcGoogle } from "react-icons/fc";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 
 const SignInPage = () => {
     const router = useRouter();
@@ -33,23 +33,29 @@ const SignInPage = () => {
                 toast.error(error.message || "Invalid email or password!");
                 return;
             }
-            toast.success("Login successful!");
+            localStorage.setItem("loginSuccess", "true");
             router.push("/");
         } catch (error) {
             toast.error("Something went wrong!");
         }
     };
+
     const googleSignIn = async () => {
-        const data = await authClient.signIn.social({
+        localStorage.setItem("socialLogin", "Google");
+        await authClient.signIn.social({
             provider: "google",
+            callbackURL: "/",
         });
     };
 
     const githubSignIn = async () => {
-        const data = await authClient.signIn.social({
-            provider: "github"
-        })
-    }
+        localStorage.setItem("socialLogin", "GitHub");
+        await authClient.signIn.social({
+            provider: "github",
+            callbackURL: "/",
+        });
+    };
+
 
     return (
         <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] py-12 px-4 flex items-center justify-center">

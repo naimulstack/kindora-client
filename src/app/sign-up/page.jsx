@@ -7,7 +7,7 @@ import { FcGoogle } from "react-icons/fc";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 
 const SignUpPage = () => {
     const router = useRouter();
@@ -28,6 +28,7 @@ const SignUpPage = () => {
         });
     };
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -39,35 +40,36 @@ const SignUpPage = () => {
             password: formData.password,
             image: formData.image?.trim() || undefined,
         });
-
         if (authError) {
             setError(authError.message || 'Registration failed. Please check your details.');
             toast.error(authError.message || 'Registration failed');
             setLoading(false);
             return;
         }
-
         if (data) {
-            toast.success('Account created successfully!');
+            localStorage.setItem("signupSuccess", "true");
             router.push("/");
             router.refresh();
         }
         setLoading(false);
-
-
     };
 
     const googleSignIn = async () => {
-        const data = await authClient.signIn.social({
+        localStorage.setItem("socialLogin", "Google");
+        await authClient.signIn.social({
             provider: "google",
+            callbackURL: "/",
         });
     };
 
     const githubSignIn = async () => {
-        const data = await authClient.signIn.social({
-            provider: "github"
-        })
-    }
+        localStorage.setItem("socialLogin", "GitHub");
+        await authClient.signIn.social({
+            provider: "github",
+            callbackURL: "/",
+        });
+    };
+
 
     return (
         <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] py-12 px-4 flex items-center justify-center">
