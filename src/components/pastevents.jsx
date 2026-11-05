@@ -10,7 +10,7 @@ const PastEvents = () => {
 
     useEffect(() => {
         const fetchEvents = async () => {
-            const response = await fetch('http://localhost:5000/past-events');
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/past-events`);
             const data = await response.json();
             setEvents(data);
         };

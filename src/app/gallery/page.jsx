@@ -101,7 +101,7 @@ const GalleryPage = () => {
     useEffect(() => {
         const fetchGallery = async () => {
             try {
-                const res = await fetch('http://localhost:5000/gallery');
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/gallery`);
                 const data = await res.json();
                 setGalleryItems(data);
             } catch (error) {

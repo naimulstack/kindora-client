@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 const TopVolunteer = async () => {
 
-    const response = await fetch('http://localhost:5000/top-volunteers', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/top-volunteers`, {
         cache: 'no-store'
     });
 

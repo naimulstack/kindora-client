@@ -31,7 +31,7 @@ const JoinEventCard = ({ eventData }) => {
         const checkJoined = async () => {
             try {
                 const res = await fetch(
-                    `http://localhost:5000/joinevent/check?eventId=${eventData._id}&email=${user.email}`
+                    `${process.env.NEXT_PUBLIC_API_URL}/joinevent/check?eventId=${eventData._id}&email=${user.email}`
                 );
 
                 const data = await res.json();
@@ -58,7 +58,7 @@ const JoinEventCard = ({ eventData }) => {
         try {
             const { _id, ...eventFields } = eventData;
 
-            const res = await fetch("http://localhost:5000/joinevent", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/joinevent`, {
                 method: isJoined ? "DELETE" : "POST",
                 headers: {
                     "Content-Type": "application/json",

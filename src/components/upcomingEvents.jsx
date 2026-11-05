@@ -10,7 +10,7 @@ const UpcomingEvents = () => {
 
     useEffect(() => {
         const fetchEvents = async () => {
-            const response = await fetch('http://localhost:5000/homepage-event');
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/homepage-event`);
             const data = await response.json();
             setEvents(data);
         };

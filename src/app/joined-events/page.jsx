@@ -19,15 +19,17 @@ const JoinedEventsPage = async () => {
     });
     const user = session?.user;
 
-    const token = getTokenFromServer()
+    const token = await getTokenFromServer()
+    console.log(token)
 
-    const res = await fetch(`http://localhost:5000/joined-events/${user?.email}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/joined-events/${user?.email}`, {
         cache: 'no-store',
         headers: {
-            authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`
         }
     });
     const joinedEvents = await res.json();
+    console.log(joinedEvents)
 
     return (
         <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] py-10 px-4 sm:px-6 lg:px-12 transition-colors duration-200">
@@ -92,10 +94,10 @@ const JoinedEventsPage = async () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                        {joinedEvents.map((event) => (
+                        {joinedEvents?.map((event) => (
 
                             <div
-                                key={event._id}
+                                key={event?._id}
                                 className="bg-white dark:bg-[#1E293B] rounded-3xl border border-[#E2E8F0] dark:border-[#334155] overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between group"
                             >
                                 <div>
@@ -104,8 +106,8 @@ const JoinedEventsPage = async () => {
                                     <div className="relative h-48 overflow-hidden bg-slate-100 dark:bg-slate-800">
 
                                         <Image
-                                            src={event.image || 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&q=80&w=800'}
-                                            alt={event.title || 'Event Image'}
+                                            src={event?.image || 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&q=80&w=800'}
+                                            alt={event?.title || 'Event Image'}
                                             fill
                                             sizes="(max-width: 768px) 100vw, 33vw"
                                             className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -114,7 +116,7 @@ const JoinedEventsPage = async () => {
                                         <div className="absolute top-4 left-4">
                                             <span className="inline-flex items-center gap-1 bg-[#16A34A] text-white text-[11px] font-semibold px-3 py-1 rounded-full shadow-sm">
                                                 <Tag className="w-3 h-3" />
-                                                {event.type || 'Drive'}
+                                                {event?.type || 'Drive'}
                                             </span>
                                         </div>
 
@@ -130,25 +132,25 @@ const JoinedEventsPage = async () => {
                                     <div className="p-6 space-y-4">
 
                                         <h3 className="text-lg font-bold text-[#172B3A] dark:text-[#F1F5F9] line-clamp-1 group-hover:text-[#16A34A] dark:group-hover:text-[#22C55E] transition-colors">
-                                            {event.title}
+                                            {event?.title}
                                         </h3>
 
                                         <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
 
                                             <div className="flex items-center gap-2.5 text-xs text-[#64748B] dark:text-[#CBD5E1]">
                                                 <CalendarDays className="w-4 h-4 text-[#16A34A] dark:text-[#22C55E] shrink-0" />
-                                                <span className="font-medium">{event.date}</span>
+                                                <span className="font-medium">{event?.date}</span>
                                             </div>
 
                                             <div className="flex items-center gap-2.5 text-xs text-[#64748B] dark:text-[#CBD5E1]">
                                                 <MapPin className="w-4 h-4 text-[#16A34A] dark:text-[#22C55E] shrink-0" />
-                                                <span className="truncate">{event.location}</span>
+                                                <span className="truncate">{event?.location}</span>
                                             </div>
 
                                         </div>
 
                                         <p className="text-xs text-[#64748B] dark:text-[#CBD5E1] line-clamp-2 leading-relaxed">
-                                            {event.description}
+                                            {event?.description}
                                         </p>
                                     </div>
                                 </div>
@@ -157,7 +159,7 @@ const JoinedEventsPage = async () => {
                                 <div className="p-6 pt-0">
 
                                     <Link
-                                        href={`/events/${event.eventId}`}
+                                        href={`/events/${event?.eventId}`}
                                         className="w-full bg-[#F0FDF4] dark:bg-emerald-950/40 hover:bg-[#16A34A] hover:text-white dark:hover:bg-[#16A34A] text-[#16A34A] dark:text-[#22C55E] font-bold py-2.5 rounded-xl transition-all text-xs flex items-center justify-center gap-2 border border-[#16A34A]/20"
                                     >
                                         View Event Details

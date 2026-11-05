@@ -60,7 +60,7 @@ const ContactPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const res = await fetch('http://localhost:5000/messages', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/messages`, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'

@@ -21,32 +21,32 @@ const EventDetailPage = async ({ params }) => {
 
   const token = await getTokenFromServer()
 
-  const res = await fetch(`http://localhost:5000/events/${id}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events/${id}`, {
     cache: "no-store",
     headers: {
-      authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`
     },
   });
   const eventData = await res.json();
-  if (!res.ok || !eventData || eventData.message === "Event not found") {
+  // if (!res.ok || !eventData || eventData.message === "Event not found") {
 
-    return (
-      <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] flex items-center justify-center px-4 py-10">
-        <div className="max-w-md w-full bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-3xl p-8 text-center shadow-xl">
-          <div className="w-20 h-20 mx-auto mb-5 rounded-full bg-red-50 dark:bg-red-950/40 flex items-center justify-center">
-            <ShieldCheck className="w-10 h-10 text-red-500" />
-          </div>
-          <h2 className="text-2xl font-extrabold text-[#172B3A] dark:text-white mb-3">Event Not Found!</h2>
-          <p className="text-sm text-[#64748B] dark:text-[#CBD5E1] mb-7">
-            Sorry, the event you are looking for does not exist or is no longer available.
-          </p>
-          <Link href="/events" className="inline-flex items-center justify-center w-full bg-[#16A34A] hover:bg-[#15803D] text-white font-bold py-3 rounded-xl transition-all shadow-md">
-            Go to Events
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  //   return (
+  //     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] flex items-center justify-center px-4 py-10">
+  //       <div className="max-w-md w-full bg-white dark:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#334155] rounded-3xl p-8 text-center shadow-xl">
+  //         <div className="w-20 h-20 mx-auto mb-5 rounded-full bg-red-50 dark:bg-red-950/40 flex items-center justify-center">
+  //           <ShieldCheck className="w-10 h-10 text-red-500" />
+  //         </div>
+  //         <h2 className="text-2xl font-extrabold text-[#172B3A] dark:text-white mb-3">Event Not Found!</h2>
+  //         <p className="text-sm text-[#64748B] dark:text-[#CBD5E1] mb-7">
+  //           Sorry, the event you are looking for does not exist or is no longer available.
+  //         </p>
+  //         <Link href="/events" className="inline-flex items-center justify-center w-full bg-[#16A34A] hover:bg-[#15803D] text-white font-bold py-3 rounded-xl transition-all shadow-md">
+  //           Go to Events
+  //         </Link>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] py-10 px-4 sm:px-6 lg:px-12 transition-colors duration-200">

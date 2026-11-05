@@ -11,7 +11,7 @@ export default function Home() {
     <main>
       <BannerPage />
       <FeaturesSection />
-      <Suspense fallback={<p>Loading volunteers...</p>}>
+      <Suspense fallback={<p>Loading...</p>}>
         <UpcomingEvents />
       </Suspense>
       <PastEvents />

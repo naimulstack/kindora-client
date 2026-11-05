@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { MapPin, CalendarDays, ArrowUpRight } from 'lucide-react';
 
 const SuccessStoriesPage = async () => {
-    const res = await fetch('http://localhost:5000/success-stories');
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/success-stories`);
 
     const stories = await res.json();
 
