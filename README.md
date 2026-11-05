@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Kindora
 
-## Getting Started
+Kindora is a community-based event management platform where users can discover, create, manage, and join community events. It provides a simple and user-friendly experience for connecting people through events and shared experiences.
 
-First, run the development server:
+## 🌐 Live Website
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Fronted= https://kindora-client-wine.vercel.app/
+Backend= https://kindora-server-nu.vercel.app/
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ Features
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- Users can create and publish community events.
+- Users can browse upcoming events and explore event details.
+- Secure authentication system with email and password.
+- Social login functionality for easy user access.
+- Event owners can edit and delete their own events.
+- Users can join community events and participate in activities.
+- Users can share inspiring experiences through the Success Stories section.
+- Contact form functionality for sending messages.
+- Protected routes with authentication-based access control.
+- Responsive and modern user interface for different devices.
+- Event and user data management using MongoDB.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+### Frontend
 
-To learn more about Next.js, take a look at the following resources:
+- Next.js
+- JavaScript
+- shadcn
+- Lucide React
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Authentication & Authorization
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Better Auth
+- MongoDB Adapter
+- JWT
 
-## Deploy on Vercel
+### Backend
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Node.js
+- Express.js
+- JavaScript
+- MongoDB
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Deployment
+
+- Vercel (Frontend)
+- Vercel (Backend)
