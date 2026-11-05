@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -21,6 +20,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { authClient } from '@/lib/auth-client';
+import { getTokenFromClient } from '@/lib/getTokenFromClient';
 
 const CreateEventPage = () => {
     const router = useRouter();
@@ -87,10 +87,13 @@ const CreateEventPage = () => {
             organizerEmail: user.email
         };
 
+        const token = await getTokenFromClient()
+
         const response = await fetch('http://localhost:5000/create-event', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(data)
         });

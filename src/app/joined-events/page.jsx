@@ -11,6 +11,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
+import { getTokenFromServer } from '@/lib/getTokenFromServer';
 
 const JoinedEventsPage = async () => {
     const session = await auth.api.getSession({
@@ -18,8 +19,13 @@ const JoinedEventsPage = async () => {
     });
     const user = session?.user;
 
+    const token = getTokenFromServer()
+
     const res = await fetch(`http://localhost:5000/joined-events/${user?.email}`, {
-        cache: 'no-store'
+        cache: 'no-store',
+        headers: {
+            authorization: `Bearer ${token}`
+        }
     });
     const joinedEvents = await res.json();
 

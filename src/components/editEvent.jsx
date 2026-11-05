@@ -23,6 +23,7 @@ import {
     PlusCircle,
     Clock,
 } from "lucide-react";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
 const EditEventPage = ({ eventData }) => {
     const router = useRouter();
@@ -95,10 +96,14 @@ const EditEventPage = ({ eventData }) => {
                 toast.error("Invalid event ID!");
                 return;
             }
+
+            const token = await getTokenFromClient()
+
             const response = await fetch(`http://localhost:5000/events/${id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(formData),
             });

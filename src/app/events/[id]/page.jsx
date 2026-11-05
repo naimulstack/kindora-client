@@ -12,11 +12,21 @@ import Image from 'next/image';
 import Link from 'next/link';
 import JoinEventCard from '@/components/joinEventCard';
 import EventOwnerActions from '@/components/EventOwnerActions';
+import { headers } from 'next/headers';
+import { auth } from '@/lib/auth';
+import { getTokenFromServer } from '@/lib/getTokenFromServer';
 
 const EventDetailPage = async ({ params }) => {
   const { id } = await params;
 
-  const res = await fetch(`http://localhost:5000/events/${id}`, { cache: 'no-store' });
+  const token = await getTokenFromServer()
+
+  const res = await fetch(`http://localhost:5000/events/${id}`, {
+    cache: "no-store",
+    headers: {
+      authorization: `Bearer ${token}`
+    },
+  });
   const eventData = await res.json();
   if (!res.ok || !eventData || eventData.message === "Event not found") {
 

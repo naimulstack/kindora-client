@@ -11,6 +11,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
 import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -25,11 +26,15 @@ const DeleteEventPage = ({ eventId }) => {
             toast.error("Invalid event ID!");
             return;
         }
+        const token = await getTokenFromClient()
 
         const res = await fetch(
             `http://localhost:5000/events/${id}`,
             {
                 method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
             }
         );
 
